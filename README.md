@@ -17,9 +17,13 @@ Eine Web-App für das iPhone, mit der du deine tägliche Proteinzufuhr einträgs
 
 ## Training
 
-Den Trainingsbereich öffnest du über den kleinen Knopf **Training** oben rechts auf der Seite „Heute“. Mit **‹ Protein** kommst du zurück.
+Den Trainingsbereich öffnest du im Tab **Einstellungen** über den obersten Eintrag **Training**. Mit **‹ Einstellungen** kommst du zurück.
 
 - **Übungen anlegen:** z. B. Bankdrücken, Kniebeugen oder Klimmzüge. Häufige Übungen stehen als Vorschläge bereit.
+- **Ordner:** Mit **Ordner erstellen** legst du Ordner wie Push, Pull oder Legs an und hakst direkt die Übungen ab, die hineingehören. Übungen ohne Ordner stehen darunter unter „Ohne Ordner“.
+  - Eine neue Übung legst du direkt in einem Ordner an, indem du im Ordner auf **Übung hinzufügen** tippst.
+  - Um eine Übung zu verschieben, öffnest du sie und wählst unter **Bearbeiten** einen anderen Ordner. Dort kannst du auch gleich einen neuen Ordner anlegen.
+  - Ordner umbenennen, Übungen zuordnen oder den Ordner löschen geht über **Bearbeiten** im Ordner. Beim Löschen bleiben die Übungen mit allen Sätzen erhalten.
 - **Sätze eintragen:** Gewicht (kg) und Wiederholungen eingeben. Das Datum steht automatisch auf heute und lässt sich ändern. Die Werte vom letzten Satz bleiben stehen, für den nächsten Satz reicht also oft ein Tippen auf „Satz eintragen“. Übungen ohne Zusatzgewicht trägst du mit 0 kg ein.
 - **Rekorde:** Ein Satz, der schwerer ist als alles davor, wird als „Rekord“ markiert.
 - **Fortschritt:** Grafik über 1 Monat, 3 Monate, 1 Jahr, alles oder einen eigenen Zeitraum. Du kannst wählen, was angezeigt wird:
@@ -62,11 +66,11 @@ Deine bisherigen Einträge bleiben erhalten, eine Neuinstallation ist nicht nöt
 
 - Alle Einträge werden **nur auf deinem iPhone** gespeichert. Nichts wird hochgeladen, auch nicht zu GitHub.
 - Safari und die installierte App haben **getrennte Speicher**. Trag deine Daten deshalb nur in der installierten App ein.
-- Wenn du die App vom Home-Bildschirm löschst, sind die Daten weg. Exportiere daher ab und zu unter **Einstellungen → Backup exportieren** eine Sicherung, z. B. in die Dateien-App oder iCloud Drive. Das Backup enthält Protein- und Trainingsdaten. Mit **Backup importieren** holst du alles zurück, auch auf ein neues iPhone.
+- Wenn du die App vom Home-Bildschirm löschst, sind die Daten weg. Exportiere daher ab und zu unter **Einstellungen → Backup exportieren** eine Sicherung, z. B. in die Dateien-App oder iCloud Drive. Das Backup enthält Protein- und Trainingsdaten samt Ordnern. Mit **Backup importieren** holst du alles zurück, auch auf ein neues iPhone.
 
 ## App später selbst ändern
 
-Wenn du eine Datei änderst und neu hochlädst, erhöhe in `sw.js` die Versionsnummer in der Zeile `const CACHE = 'protracker-v2';` (z. B. auf `v3`). Dann lädt das iPhone beim nächsten Öffnen mit Internet die neue Version.
+Wenn du eine Datei änderst und neu hochlädst, erhöhe in `sw.js` die Versionsnummer in der Zeile `const CACHE = 'protracker-v3';` (z. B. auf `v4`). Dann lädt das iPhone beim nächsten Öffnen mit Internet die neue Version.
 
 ## Dateien
 

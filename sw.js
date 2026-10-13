@@ -1,6 +1,6 @@
 /* Service Worker: macht die App offline nutzbar.
    Bei Änderungen an der App die Versionsnummer erhöhen, damit alte Dateien ersetzt werden. */
-const CACHE = 'protracker-v2';
+const CACHE = 'protracker-v3';
 const ASSETS = [
   './',
   './index.html',

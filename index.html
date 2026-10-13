@@ -39,6 +39,7 @@
   --tab-bg:rgba(255,255,255,.86);
   --shadow:0 1px 2px rgba(28,32,51,.06);
   --tr-accent:#4a55c9;
+  --tr-soft:#e0e3fb;
   --font:ui-rounded,"SF Pro Rounded","Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
   --sat:env(safe-area-inset-top,0px);
   --sab:env(safe-area-inset-bottom,0px);
@@ -64,6 +65,7 @@
     --tab-bg:rgba(27,29,51,.86);
     --shadow:none;
     --tr-accent:#7480ec;
+    --tr-soft:#2b2f63;
   }
 }
 /* Trainingsbereich: eigene Akzentfarbe (Indigo) statt Pink */
@@ -270,14 +272,19 @@ table.days td.zero{color:var(--muted)}
 ol.steps{margin:8px 0 0;padding-left:22px;font-size:15px;color:var(--ink-2)}
 ol.steps li{margin:4px 0}
 
-/* ---------- Zugang zum Training ---------- */
-.topbar{display:flex;justify-content:flex-end;margin:0 0 4px}
-.trainbtn{
-  display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;background:var(--surface);
-  box-shadow:var(--shadow);padding:7px 14px 7px 10px;font-size:14px;font-weight:800;color:var(--ink-2);
+/* ---------- Zugang zum Training (in den Einstellungen) ---------- */
+.navcard{
+  display:grid;grid-template-columns:42px 1fr 16px;gap:12px;align-items:center;width:100%;
+  border:0;text-align:left;padding:14px 16px;margin-bottom:14px;background:var(--surface);
+  border-radius:20px;box-shadow:var(--shadow);
 }
-.trainbtn svg{width:20px;height:20px;color:var(--tr-accent);flex:none}
-.trainbtn:active{transform:scale(.97)}
+.navcard:active{background:var(--surface-2)}
+.navicon{width:42px;height:42px;border-radius:12px;background:var(--tr-soft);color:var(--tr-accent);display:grid;place-items:center}
+.navicon svg{width:24px;height:24px}
+.navtxt{min-width:0}
+.navtxt strong{display:block;font-size:18px;font-weight:800}
+.navtxt small{display:block;font-size:14px;color:var(--ink-2);margin-top:1px}
+.navcard .chev{width:16px;height:16px;color:var(--muted)}
 
 /* ---------- Training ---------- */
 .navrow{display:flex;justify-content:space-between;align-items:center;min-height:44px;margin:0 -6px}
@@ -326,6 +333,27 @@ ol.steps li{margin:4px 0}
 .card .tiles{box-shadow:none}
 #exTiles{margin-top:14px}
 
+/* Ordner */
+.exlist button.fold{grid-template-columns:30px 1fr 16px}
+.foicon{width:28px;height:28px;color:var(--accent)}
+.exlist + .listhead{margin-top:26px}
+.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.btnrow > button{margin:0}
+.btnrow > .primary{height:50px;font-size:17px}
+select.input{
+  -webkit-appearance:none;appearance:none;padding-right:42px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4' fill='none' stroke='%236f7286' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;background-size:16px;
+}
+.checklist{list-style:none;margin:0;padding:0 14px;background:var(--surface-2);border-radius:14px}
+.checklist li + li{border-top:1px solid var(--line)}
+.checklist label{display:grid;grid-template-columns:24px 1fr auto;gap:12px;align-items:center;padding:12px 0;font-size:17px;font-weight:700}
+.checklist input{width:22px;height:22px;margin:0;accent-color:var(--btn)}
+.checklist small{font-size:13px;font-weight:700;color:var(--ink-2)}
+.checklist .none{padding:12px 0;font-size:15px;color:var(--ink-2)}
+.sheet .field + .field{margin-top:12px}
+.sheet .chips + .field{margin-top:12px}
+
 /* ---------- tab bar ---------- */
 .tabbar{
   position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;
@@ -339,8 +367,8 @@ ol.steps li{margin:4px 0}
 
 /* ---------- dialog & toast ---------- */
 dialog{
-  border:0;padding:0;margin:auto auto 0;width:100%;max-width:560px;max-height:none;
-  background:var(--surface);color:var(--ink);border-radius:24px 24px 0 0;
+  border:0;padding:0;margin:auto auto 0;width:100%;max-width:560px;max-height:calc(100dvh - 24px);overflow-y:auto;
+  background:var(--surface);color:var(--ink);border-radius:24px 24px 0 0;overscroll-behavior:contain;
 }
 dialog::backdrop{background:rgba(10,12,28,.42)}
 dialog[open]{animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
@@ -376,12 +404,6 @@ dialog[open]{animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
 <main>
   <!-- ================= HEUTE ================= -->
   <section id="view-today" aria-label="Heute">
-    <div class="topbar">
-      <button type="button" class="trainbtn" id="openTraining">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></svg>
-        Training
-      </button>
-    </div>
     <div class="hint" id="installHint" hidden>
       <p>Als App installieren: In Safari auf <strong>Teilen</strong>
         <svg class="shareicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1"/></svg>
@@ -522,6 +544,12 @@ dialog[open]{animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
   <section id="view-settings" aria-label="Einstellungen" hidden>
     <h1>Einstellungen</h1>
 
+    <button type="button" class="navcard" id="openTraining">
+      <span class="navicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></svg></span>
+      <span class="navtxt"><strong>Training</strong><small id="trainMeta">Übungen und Gewichtsfortschritt</small></span>
+      <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"/></svg>
+    </button>
+
     <form class="group" id="goalForm" novalidate>
       <h2>Tagesziel</h2>
       <div class="row">
@@ -556,24 +584,42 @@ dialog[open]{animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
       <p>Löscht alle Protein- und Trainingsdaten und Einstellungen auf diesem Gerät.</p>
       <button class="btn2 danger" id="wipeBtn" type="button">Alle Daten löschen</button>
     </div>
-    <p class="version">ProTracker 1.1</p>
+    <p class="version">ProTracker 1.2</p>
   </section>
 
   <!-- ================= TRAINING: Übungen ================= -->
   <section id="view-training" aria-label="Training" hidden>
     <div class="navrow">
-      <button type="button" class="backbtn" id="trBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Protein</button>
+      <button type="button" class="backbtn" id="trBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Einstellungen</button>
     </div>
     <h1>Training</h1>
+    <ul class="exlist" id="folderList" hidden></ul>
+    <div class="listhead" id="looseHead" hidden><h2>Ohne Ordner</h2></div>
     <ul class="exlist" id="exList"></ul>
-    <p class="empty" id="exEmpty" hidden>Leg deine erste Übung an. Dort trägst du dann deine Sätze ein und siehst, wie sich deine Gewichte entwickeln.</p>
-    <button type="button" class="primary" id="addExBtn">Übung hinzufügen</button>
+    <p class="empty" id="exEmpty" hidden>Leg deine erste Übung an. Dort trägst du dann deine Sätze ein und siehst, wie sich deine Gewichte entwickeln. Mit Ordnern wie Push, Pull und Legs behältst du den Überblick.</p>
+    <div class="btnrow">
+      <button type="button" class="primary" id="addExBtn">Übung hinzufügen</button>
+      <button type="button" class="btn2" id="addFoBtn">Ordner erstellen</button>
+    </div>
+  </section>
+
+  <!-- ================= TRAINING: Ordner ================= -->
+  <section id="view-folder" aria-label="Ordner" hidden>
+    <div class="navrow">
+      <button type="button" class="backbtn" id="foBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Training</button>
+      <button type="button" class="textbtn" id="foEdit">Bearbeiten</button>
+    </div>
+    <h1 id="foTitle"></h1>
+    <p class="h1sub" id="foSub"></p>
+    <ul class="exlist" id="foExList"></ul>
+    <p class="empty" id="foEmpty" hidden>Dieser Ordner ist noch leer. Füge eine neue Übung hinzu oder wähle über „Bearbeiten“ vorhandene Übungen aus.</p>
+    <button type="button" class="btn2" id="foAddEx" style="margin-top:14px">Übung hinzufügen</button>
   </section>
 
   <!-- ================= TRAINING: einzelne Übung ================= -->
   <section id="view-exercise" aria-label="Übung" hidden>
     <div class="navrow">
-      <button type="button" class="backbtn" id="exBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Übungen</button>
+      <button type="button" class="backbtn" id="exBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg><span id="exBackLbl">Training</span></button>
       <button type="button" class="textbtn" id="exEdit">Bearbeiten</button>
     </div>
     <h1 id="exTitle"></h1>
@@ -695,12 +741,39 @@ dialog[open]{animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
       <input class="input" id="exNameInput" maxlength="40" placeholder="z. B. Bankdrücken" enterkeyhint="done" autocapitalize="sentences">
     </label>
     <div class="chips" id="exSuggest" role="group" aria-label="Vorschläge"></div>
+    <label class="field"><span class="lbl">Ordner</span>
+      <select class="input small" id="exFolderSel"></select>
+    </label>
+    <label class="field" id="exNewFolderWrap" hidden><span class="lbl">Name des neuen Ordners</span>
+      <input class="input small" id="exNewFolder" maxlength="30" placeholder="z. B. Push" enterkeyhint="done">
+    </label>
     <p class="formerror" id="exError" hidden></p>
     <div class="sheetbtns">
       <button class="btn2" type="button" id="exCancel">Abbrechen</button>
       <button class="primary" type="submit" id="exSave">Hinzufügen</button>
     </div>
     <button class="delbtn" type="button" id="exDelete" hidden>Übung löschen</button>
+  </form>
+</dialog>
+
+<dialog id="foDialog" aria-labelledby="foDlgTitle">
+  <form class="sheet" id="foForm" novalidate autocomplete="off">
+    <div class="grab"></div>
+    <h2 id="foDlgTitle" tabindex="-1" autofocus>Ordner erstellen</h2>
+    <label class="field"><span class="lbl">Name</span>
+      <input class="input" id="foNameInput" maxlength="30" placeholder="z. B. Push" enterkeyhint="done" autocapitalize="sentences">
+    </label>
+    <div class="chips" id="foSuggest" role="group" aria-label="Vorschläge"></div>
+    <div class="field" id="foExWrap">
+      <span class="lbl">Übungen in diesem Ordner</span>
+      <ul class="checklist" id="foExChecks"></ul>
+    </div>
+    <p class="formerror" id="foError" hidden></p>
+    <div class="sheetbtns">
+      <button class="btn2" type="button" id="foCancel">Abbrechen</button>
+      <button class="primary" type="submit" id="foSave">Erstellen</button>
+    </div>
+    <button class="delbtn" type="button" id="foDelete" hidden>Ordner löschen</button>
   </form>
 </dialog>
 
@@ -816,16 +889,23 @@ function normalize(s) {
   if (!ui.area || typeof ui.area !== 'object') ui.area = null;
 
   // Training
+  const folders = Array.isArray(s.folders) ? s.folders
+    .filter((x) => x && typeof x.name === 'string' && x.name.trim())
+    .map((x) => ({ id: String(x.id || uid()), name: x.name.trim().slice(0, 30), created: Number(x.created) || 0 })) : [];
+  const foIds = new Set(folders.map((x) => x.id));
   const exercises = Array.isArray(s.exercises) ? s.exercises
     .filter((x) => x && typeof x.name === 'string' && x.name.trim())
-    .map((x) => ({ id: String(x.id || uid()), name: x.name.trim().slice(0, 40), created: Number(x.created) || 0 })) : [];
+    .map((x) => ({
+      id: String(x.id || uid()), name: x.name.trim().slice(0, 40), created: Number(x.created) || 0,
+      folder: x.folder != null && foIds.has(String(x.folder)) ? String(x.folder) : null,
+    })) : [];
   const exIds = new Set(exercises.map((x) => x.id));
   const sets = Array.isArray(s.sets) ? s.sets
     .filter((x) => x && exIds.has(String(x.ex)) && isDate(x.date) && typeof x.kg === 'number' && isFinite(x.kg)
       && x.kg >= 0 && x.kg <= 1000 && Number.isInteger(x.reps) && x.reps >= 1 && x.reps <= 500)
     .map((x) => ({ id: String(x.id || uid()), ex: String(x.ex), date: x.date, kg: Math.round(x.kg * 100) / 100, reps: x.reps, t: Number(x.t) || 0 })) : [];
 
-  return { v: 1, goals, entries, exercises, sets, ui, hintClosed: !!s.hintClosed };
+  return { v: 1, goals, entries, folders, exercises, sets, ui, hintClosed: !!s.hintClosed };
 }
 function load() {
   try { const raw = localStorage.getItem(KEY); if (raw) return normalize(JSON.parse(raw)); } catch (e) { /* leer */ }
@@ -872,37 +952,45 @@ function currentStreak(map) {
 /* =========================================================
    Navigation
    ========================================================= */
-const VIEWS = ['today', 'stats', 'settings', 'training', 'exercise'];
+const VIEWS = ['today', 'stats', 'settings', 'training', 'folder', 'exercise'];
 const MAIN = ['today', 'stats', 'settings'];
+const TRAIN = ['training', 'folder', 'exercise'];
 let tab = 'today';      // zuletzt genutzter Haupt-Tab
 let view = 'today';     // aktuell sichtbare Ansicht
 let curEx = null;       // geöffnete Übung
+let curFolder = null;   // geöffneter Ordner
 let navDepth = 0;       // wie viele Schritte wir selbst in die History gelegt haben
+let navStack = [];      // vorherige Ansichten zu diesen Schritten (für die Zurück-Beschriftung)
+const curArg = () => (view === 'exercise' ? curEx : view === 'folder' ? curFolder : null);
 
-function showView(v, ex, opts = {}) {
+// arg = Übungs-ID (exercise) bzw. Ordner-ID (folder)
+function showView(v, arg, opts = {}) {
+  const prev = { v: view, a: curArg() };
   if (!VIEWS.includes(v)) v = 'today';
-  if (v === 'exercise' && !state.exercises.some((x) => x.id === ex)) v = 'training';
+  if (v === 'exercise' && !state.exercises.some((x) => x.id === arg)) v = 'training';
+  if (v === 'folder' && !state.folders.some((x) => x.id === arg)) v = 'training';
   view = v;
   if (MAIN.includes(v)) tab = v;
-  if (v === 'exercise') curEx = ex;
+  if (v === 'exercise') curEx = arg;
+  if (v === 'folder') curFolder = arg;
   hideToast();
   VIEWS.forEach((n) => { $('#view-' + n).hidden = n !== v; });
-  const inTraining = v === 'training' || v === 'exercise';
+  const inTraining = TRAIN.includes(v);
   document.body.classList.toggle('area-training', inTraining);
   $$('.tabbar button').forEach((b) => {
     if (b.dataset.tab === v) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
   });
   if (!opts.keepScroll) window.scrollTo(0, 0);
 
-  const hs = { pt: 1, v, ex: v === 'exercise' ? curEx : null, d: navDepth };
+  const hs = { pt: 1, v, a: curArg(), d: navDepth };
   try {
-    if (opts.push) { navDepth++; hs.d = navDepth; history.pushState(hs, ''); }
+    if (opts.push) { navStack.length = navDepth; navStack.push(prev); navDepth++; hs.d = navDepth; history.pushState(hs, ''); }
     else if (!opts.fromPop) history.replaceState(hs, '');
   } catch (e) { /* History nicht verfügbar */ }
 
   // Trainingsbereich merken, damit die App nach einem Neustart im Studio dort weitermacht
   if (!opts.noSave) {
-    state.ui.area = inTraining ? { v, ex: v === 'exercise' ? curEx : null, t: Date.now() } : null;
+    state.ui.area = inTraining ? { v, a: curArg(), t: Date.now() } : null;
     save();
   }
 
@@ -910,17 +998,23 @@ function showView(v, ex, opts = {}) {
   if (v === 'settings') renderSettings();
   if (v === 'today') renderToday(false);
   if (v === 'training') renderTraining();
+  if (v === 'folder') renderFolder();
   if (v === 'exercise') renderExercise();
 }
 function navBack() {
   if (navDepth > 0) { history.back(); return; }
-  if (view === 'exercise') showView('training'); else showView(tab);
+  if (view === 'exercise') {
+    const ex = state.exercises.find((x) => x.id === curEx);
+    if (ex && ex.folder) showView('folder', ex.folder); else showView('training');
+  } else if (view === 'folder') showView('training');
+  else if (view === 'training') showView('settings');
+  else showView(tab);
 }
 window.addEventListener('popstate', (e) => {
   const s = e.state;
   $$('dialog[open]').forEach((d) => d.close());
-  if (s && s.pt) { navDepth = s.d || 0; showView(s.v, s.ex, { fromPop: true }); }
-  else { navDepth = 0; showView(tab, null, { fromPop: true }); }
+  if (s && s.pt) { navDepth = s.d || 0; navStack.length = Math.min(navStack.length, navDepth); showView(s.v, s.a, { fromPop: true }); }
+  else { navDepth = 0; navStack = []; showView(tab, null, { fromPop: true }); }
 });
 $$('.tabbar button').forEach((b) => b.addEventListener('click', () => showView(b.dataset.tab)));
 
@@ -1661,35 +1755,90 @@ function sparkSVG(vals) {
   const last = pts[n - 1];
   return `<svg class="spark" viewBox="0 0 ${w} ${h}" aria-hidden="true"><path d="${d}"/><circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="3"/></svg>`;
 }
+const FOLDER_ICON = '<svg class="foicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7.2a2 2 0 0 1 2-2h4.2l2.1 2.3H19a2 2 0 0 1 2 2v8.3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>';
+
+// Zeile für eine Übung (Name, letzter Satz, Mini-Verlauf)
+function exRow(x) {
+  const D = exData(x.id);
+  const last = D.sessions[D.sessions.length - 1] || null;
+  const li = document.createElement('li');
+  const b = document.createElement('button');
+  b.type = 'button';
+  const txt = document.createElement('span'); txt.className = 'txt';
+  const nm = document.createElement('span'); nm.className = 'exn'; nm.textContent = x.name;
+  const sb = document.createElement('span'); sb.className = 'exs';
+  sb.textContent = last ? `${fmtSet(last.top)}, ${ago(last.date)}` : 'Noch keine Sätze';
+  txt.append(nm, sb);
+  b.appendChild(txt);
+  const vals = D.sessions.slice(-12).map((ss) => (D.bodyweight ? ss.maxReps : ss.top.kg));
+  b.insertAdjacentHTML('beforeend', sparkSVG(vals) + CHEV);
+  b.addEventListener('click', () => openExercise(x.id));
+  li.appendChild(b);
+  return li;
+}
+function lastTrained(exIds) {
+  let d = null;
+  for (const s of state.sets) if (exIds.has(s.ex) && (!d || s.date > d)) d = s.date;
+  return d;
+}
+const uebungen = (n) => `${n} ${n === 1 ? 'Übung' : 'Übungen'}`;
+function folderSummary(f) {
+  const exs = state.exercises.filter((x) => x.folder === f.id);
+  if (!exs.length) return 'Noch leer';
+  const d = lastTrained(new Set(exs.map((x) => x.id)));
+  return uebungen(exs.length) + (d ? `, zuletzt ${ago(d)}` : '');
+}
+
 function renderTraining() {
-  const list = $('#exList');
+  const fl = $('#folderList'), list = $('#exList');
+  fl.textContent = '';
   list.textContent = '';
-  const items = state.exercises.map((x) => { const D = exData(x.id); return { x, D, last: D.sessions[D.sessions.length - 1] || null }; });
-  items.sort((a, b) => {
-    const ka = a.last ? a.last.date : '', kb = b.last ? b.last.date : '';
-    if (ka !== kb) return ka < kb ? 1 : -1;
-    return (b.x.created || 0) - (a.x.created || 0);
-  });
-  $('#exEmpty').hidden = items.length > 0;
-  list.hidden = items.length === 0;
-  $('#addExBtn').className = items.length ? 'btn2' : 'primary';
-  for (const it of items) {
+  const hasFolders = state.folders.length > 0;
+  fl.hidden = !hasFolders;
+  for (const f of state.folders) {
     const li = document.createElement('li');
     const b = document.createElement('button');
     b.type = 'button';
+    b.className = 'fold';
+    b.insertAdjacentHTML('beforeend', FOLDER_ICON);
     const txt = document.createElement('span'); txt.className = 'txt';
-    const nm = document.createElement('span'); nm.className = 'exn'; nm.textContent = it.x.name;
-    const sb = document.createElement('span'); sb.className = 'exs';
-    sb.textContent = it.last ? `${fmtSet(it.last.top)}, ${ago(it.last.date)}` : 'Noch keine Sätze';
+    const nm = document.createElement('span'); nm.className = 'exn'; nm.textContent = f.name;
+    const sb = document.createElement('span'); sb.className = 'exs'; sb.textContent = folderSummary(f);
     txt.append(nm, sb);
     b.appendChild(txt);
-    const vals = it.D.sessions.slice(-12).map((ss) => (it.D.bodyweight ? ss.maxReps : ss.top.kg));
-    b.insertAdjacentHTML('beforeend', sparkSVG(vals) + CHEV);
-    b.addEventListener('click', () => openExercise(it.x.id));
+    b.insertAdjacentHTML('beforeend', CHEV);
+    b.addEventListener('click', () => showView('folder', f.id, { push: true }));
     li.appendChild(b);
-    list.appendChild(li);
+    fl.appendChild(li);
   }
+  const loose = state.exercises.filter((x) => !x.folder);
+  loose.forEach((x) => list.appendChild(exRow(x)));
+  list.hidden = loose.length === 0;
+  $('#looseHead').hidden = !(hasFolders && loose.length);
+  const empty = !hasFolders && !state.exercises.length;
+  $('#exEmpty').hidden = !empty;
+  $('#addExBtn').className = empty ? 'primary' : 'btn2';
 }
+
+function renderFolder() {
+  const f = state.folders.find((x) => x.id === curFolder);
+  if (!f) return;
+  $('#foTitle').textContent = f.name;
+  const exs = state.exercises.filter((x) => x.folder === f.id);
+  const d = lastTrained(new Set(exs.map((x) => x.id)));
+  $('#foSub').textContent = exs.length ? uebungen(exs.length) + (d ? `, zuletzt trainiert ${ago(d)}` : '') : '';
+  $('#foSub').hidden = !exs.length;
+  const list = $('#foExList');
+  list.textContent = '';
+  exs.forEach((x) => list.appendChild(exRow(x)));
+  list.hidden = !exs.length;
+  $('#foEmpty').hidden = exs.length > 0;
+  $('#foAddEx').className = exs.length ? 'btn2' : 'primary';
+}
+$('#foBack').addEventListener('click', navBack);
+$('#foEdit').addEventListener('click', () => openFoDialog('edit'));
+$('#foAddEx').addEventListener('click', () => openExDialog('add', curFolder));
+$('#addFoBtn').addEventListener('click', () => openFoDialog('add'));
 function openExercise(id) { showView('exercise', id, { push: true }); }
 $('#trBack').addEventListener('click', navBack);
 $('#exBack').addEventListener('click', navBack);
@@ -1723,6 +1872,10 @@ function renderExercise() {
   }
   $('#setDate').max = today();
   $('#exTitle').textContent = ex.name;
+  const back = navDepth > 0 ? navStack[navDepth - 1] : null;
+  $('#exBackLbl').textContent = back
+    ? (back.v === 'folder' ? folderName(back.a) || 'Training' : 'Training')
+    : (ex.folder ? folderName(ex.folder) || 'Training' : 'Training');
   $('#exRecord').textContent = D.best ? `Rekord: ${fmtSet(D.best)} am ${fd(D.best.date, 'dmy')}` : 'Noch keine Sätze eingetragen';
   renderFormSets(D);
   renderExProgress(D);
@@ -2089,16 +2242,39 @@ function lineChart(el, cfg) {
 function openDlg(d) { if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', ''); }
 function closeDlg(d) { if (d.open) d.close(); }
 
+function rerender() {
+  if (view === 'training') renderTraining();
+  else if (view === 'folder') renderFolder();
+  else if (view === 'exercise') renderExercise();
+  else if (view === 'settings') renderSettings();
+}
+const cleanName = (v, max) => String(v || '').trim().replace(/\s+/g, ' ').slice(0, max);
+const folderName = (id) => { const f = state.folders.find((x) => x.id === id); return f ? f.name : null; };
+
+/* Übung anlegen / bearbeiten */
 const xDlg = $('#exDialog');
 let exDlgMode = 'add';
-function openExDialog(mode) {
+function fillFolderSelect(selected) {
+  const sel = $('#exFolderSel');
+  sel.textContent = '';
+  const add = (v, t) => { const o = document.createElement('option'); o.value = v; o.textContent = t; sel.appendChild(o); };
+  add('', 'Kein Ordner');
+  state.folders.forEach((f) => add(f.id, f.name));
+  add('__new', 'Neuen Ordner anlegen …');
+  sel.value = selected && state.folders.some((f) => f.id === selected) ? selected : '';
+  $('#exNewFolderWrap').hidden = true;
+  $('#exNewFolder').value = '';
+}
+function openExDialog(mode, presetFolder) {
   exDlgMode = mode;
   const ex = mode === 'edit' ? state.exercises.find((x) => x.id === curEx) : null;
+  if (mode === 'edit' && !ex) return;
   $('#exDlgTitle').textContent = mode === 'edit' ? 'Übung bearbeiten' : 'Übung hinzufügen';
   $('#exSave').textContent = mode === 'edit' ? 'Speichern' : 'Hinzufügen';
   $('#exNameInput').value = ex ? ex.name : '';
   $('#exDelete').hidden = mode !== 'edit';
   $('#exError').hidden = true;
+  fillFolderSelect(ex ? ex.folder : presetFolder);
   const sug = $('#exSuggest');
   sug.textContent = '';
   if (mode === 'add') {
@@ -2113,32 +2289,55 @@ function openExDialog(mode) {
   sug.hidden = !sug.children.length;
   openDlg(xDlg);
 }
-$('#addExBtn').addEventListener('click', () => openExDialog('add'));
+$('#exFolderSel').addEventListener('change', () => {
+  const nw = $('#exFolderSel').value === '__new';
+  $('#exNewFolderWrap').hidden = !nw;
+  if (nw) $('#exNewFolder').focus();
+});
+$('#addExBtn').addEventListener('click', () => openExDialog('add', null));
 $('#exEdit').addEventListener('click', () => openExDialog('edit'));
 $('#exCancel').addEventListener('click', () => closeDlg(xDlg));
 xDlg.addEventListener('click', (ev) => { if (ev.target === xDlg) closeDlg(xDlg); });
 $('#exForm').addEventListener('submit', (ev) => {
   ev.preventDefault();
-  const name = $('#exNameInput').value.trim().replace(/\s+/g, ' ').slice(0, 40);
+  const name = cleanName($('#exNameInput').value, 40);
   const err = $('#exError');
-  if (!name) { err.textContent = 'Gib einen Namen ein, zum Beispiel Bankdrücken.'; err.hidden = false; return; }
+  const fail = (msg) => { err.textContent = msg; err.hidden = false; };
+  if (!name) return fail('Gib einen Namen ein, zum Beispiel Bankdrücken.');
   const dupe = state.exercises.some((x) => x.name.toLowerCase() === name.toLowerCase() && (exDlgMode === 'add' || x.id !== curEx));
-  if (dupe) { err.textContent = 'Diese Übung gibt es schon.'; err.hidden = false; return; }
+  if (dupe) return fail('Diese Übung gibt es schon.');
+
+  // Ordner: vorhandener, keiner oder neu anlegen
+  let folderId = $('#exFolderSel').value || null;
+  let newFolder = null;
+  if (folderId === '__new') {
+    const fn = cleanName($('#exNewFolder').value, 30);
+    if (!fn) return fail('Gib einen Namen für den neuen Ordner ein, zum Beispiel Push.');
+    const existing = state.folders.find((f) => f.name.toLowerCase() === fn.toLowerCase());
+    if (existing) folderId = existing.id;
+    else { newFolder = { id: uid(), name: fn, created: Date.now() }; folderId = newFolder.id; }
+  }
+  if (newFolder) state.folders.push(newFolder);
+
   if (exDlgMode === 'edit') {
     const ex = state.exercises.find((x) => x.id === curEx);
     if (!ex) return closeDlg(xDlg);
+    const moved = ex.folder !== folderId;
+    const renamed = ex.name !== name;
     ex.name = name;
+    ex.folder = folderId;
     save();
     closeDlg(xDlg);
     renderExercise();
-    toast('Name gespeichert');
+    if (moved) toast(folderId ? `${name} liegt jetzt in ${folderName(folderId)}` : `${name} liegt jetzt ohne Ordner`);
+    else toast(renamed ? 'Name gespeichert' : 'Gespeichert');
   } else {
-    const ex = { id: uid(), name, created: Date.now() };
+    const ex = { id: uid(), name, created: Date.now(), folder: folderId };
     state.exercises.push(ex);
-    if (!save()) { state.exercises.pop(); return; }
+    if (!save()) { state.exercises.pop(); if (newFolder) state.folders.pop(); return; }
     closeDlg(xDlg);
     openExercise(ex.id);
-    toast(`${name} hinzugefügt`);
+    toast(folderId ? `${name} in ${folderName(folderId)} hinzugefügt` : `${name} hinzugefügt`);
   }
 });
 $('#exDelete').addEventListener('click', () => {
@@ -2146,16 +2345,117 @@ $('#exDelete').addEventListener('click', () => {
   if (!ex) return closeDlg(xDlg);
   const removedSets = state.sets.filter((s) => s.ex === ex.id);
   if (removedSets.length && !confirm(`${ex.name} und ${removedSets.length === 1 ? 'den eingetragenen Satz' : 'alle ' + removedSets.length + ' Sätze'} löschen?`)) return;
+  const idx = state.exercises.indexOf(ex);
   state.exercises = state.exercises.filter((x) => x.id !== ex.id);
   state.sets = state.sets.filter((s) => s.ex !== ex.id);
   save();
   closeDlg(xDlg);
   navBack();
   setTimeout(() => toast(`${ex.name} gelöscht`, 'Rückgängig', () => {
-    state.exercises.push(ex);
+    if (ex.folder && !state.folders.some((f) => f.id === ex.folder)) ex.folder = null;
+    state.exercises.splice(Math.min(idx, state.exercises.length), 0, ex);
     state.sets = state.sets.concat(removedSets);
     save();
-    if (view === 'training') renderTraining();
+    rerender();
+  }), 250);
+});
+
+/* Ordner anlegen / bearbeiten */
+const FOLDER_SUGGEST = ['Push', 'Pull', 'Legs', 'Oberkörper', 'Unterkörper', 'Ganzkörper', 'Core', 'Cardio'];
+const fDlg = $('#foDialog');
+let foDlgMode = 'add';
+function openFoDialog(mode) {
+  foDlgMode = mode;
+  const f = mode === 'edit' ? state.folders.find((x) => x.id === curFolder) : null;
+  if (mode === 'edit' && !f) return;
+  $('#foDlgTitle').textContent = mode === 'edit' ? 'Ordner bearbeiten' : 'Ordner erstellen';
+  $('#foSave').textContent = mode === 'edit' ? 'Speichern' : 'Erstellen';
+  $('#foNameInput').value = f ? f.name : '';
+  $('#foDelete').hidden = mode !== 'edit';
+  $('#foError').hidden = true;
+
+  const sug = $('#foSuggest');
+  sug.textContent = '';
+  if (mode === 'add') {
+    const have = new Set(state.folders.map((x) => x.name.toLowerCase()));
+    FOLDER_SUGGEST.filter((n) => !have.has(n.toLowerCase())).forEach((n) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip'; b.textContent = n;
+      b.addEventListener('click', () => { $('#foNameInput').value = n; $('#foError').hidden = true; });
+      sug.appendChild(b);
+    });
+  }
+  sug.hidden = !sug.children.length;
+
+  // Übungen auswählen, die in diesen Ordner gehören
+  const ul = $('#foExChecks');
+  ul.textContent = '';
+  if (!state.exercises.length) {
+    const li = document.createElement('li'); li.className = 'none';
+    li.textContent = 'Noch keine Übungen angelegt. Du kannst sie später hier oder beim Anlegen einer Übung zuordnen.';
+    ul.appendChild(li);
+  }
+  for (const x of state.exercises) {
+    const li = document.createElement('li');
+    const lab = document.createElement('label');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.value = x.id;
+    cb.checked = !!(f && x.folder === f.id);
+    const nm = document.createElement('span'); nm.textContent = x.name;
+    const where = document.createElement('small');
+    if (x.folder && (!f || x.folder !== f.id)) where.textContent = 'in ' + (folderName(x.folder) || '');
+    lab.append(cb, nm, where);
+    li.appendChild(lab);
+    ul.appendChild(li);
+  }
+  openDlg(fDlg);
+}
+$('#foCancel').addEventListener('click', () => closeDlg(fDlg));
+fDlg.addEventListener('click', (ev) => { if (ev.target === fDlg) closeDlg(fDlg); });
+$('#foForm').addEventListener('submit', (ev) => {
+  ev.preventDefault();
+  const name = cleanName($('#foNameInput').value, 30);
+  const err = $('#foError');
+  if (!name) { err.textContent = 'Gib einen Namen ein, zum Beispiel Push.'; err.hidden = false; return; }
+  const dupe = state.folders.some((x) => x.name.toLowerCase() === name.toLowerCase() && (foDlgMode === 'add' || x.id !== curFolder));
+  if (dupe) { err.textContent = 'Einen Ordner mit diesem Namen gibt es schon.'; err.hidden = false; return; }
+  let f;
+  if (foDlgMode === 'edit') {
+    f = state.folders.find((x) => x.id === curFolder);
+    if (!f) return closeDlg(fDlg);
+    f.name = name;
+  } else {
+    f = { id: uid(), name, created: Date.now() };
+    state.folders.push(f);
+  }
+  $$('#foExChecks input').forEach((cb) => {
+    const x = state.exercises.find((e) => e.id === cb.value);
+    if (!x) return;
+    if (cb.checked) x.folder = f.id;
+    else if (x.folder === f.id) x.folder = null;
+  });
+  save();
+  closeDlg(fDlg);
+  rerender();
+  toast(foDlgMode === 'edit' ? 'Ordner gespeichert' : `Ordner ${name} erstellt`);
+});
+$('#foDelete').addEventListener('click', () => {
+  const f = state.folders.find((x) => x.id === curFolder);
+  if (!f) return closeDlg(fDlg);
+  const members = state.exercises.filter((x) => x.folder === f.id);
+  const n = members.length;
+  if (n && !confirm(`Ordner ${f.name} löschen? ${n === 1 ? 'Die Übung darin bleibt erhalten und steht' : `Die ${n} Übungen darin bleiben erhalten und stehen`} danach ohne Ordner da.`)) return;
+  const idx = state.folders.indexOf(f);
+  state.folders = state.folders.filter((x) => x.id !== f.id);
+  members.forEach((x) => { x.folder = null; });
+  save();
+  closeDlg(fDlg);
+  navBack();
+  setTimeout(() => toast(`Ordner ${f.name} gelöscht`, 'Rückgängig', () => {
+    state.folders.splice(Math.min(idx, state.folders.length), 0, f);
+    members.forEach((x) => { if (state.exercises.includes(x) && !x.folder) x.folder = f.id; });
+    save();
+    rerender();
   }), 250);
 });
 
@@ -2218,6 +2518,14 @@ function renderSettings() {
   if (ne) meta += `, ${ns} ${ns === 1 ? 'Trainingssatz' : 'Trainingssätze'} in ${ne} ${ne === 1 ? 'Übung' : 'Übungen'}`;
   $('#dataMeta').textContent = meta + '.';
   $('#installGroup').hidden = isStandalone();
+  const nf = state.folders.length;
+  let tm = 'Übungen anlegen und Gewichtsfortschritt verfolgen';
+  if (ne) {
+    tm = uebungen(ne) + (nf ? ` in ${nf} ${nf === 1 ? 'Ordner' : 'Ordnern'}` : '');
+    const d = lastTrained(new Set(state.exercises.map((x) => x.id)));
+    if (d) tm += `, zuletzt ${ago(d)}`;
+  } else if (nf) tm = `${nf} Ordner, noch keine Übungen`;
+  $('#trainMeta').textContent = tm;
 }
 
 $('#goalForm').addEventListener('submit', (ev) => {
@@ -2242,7 +2550,7 @@ $('#goalForm').addEventListener('submit', (ev) => {
 $('#exportBtn').addEventListener('click', async () => {
   const data = {
     app: 'protracker', exported: new Date().toISOString(), v: 1,
-    goals: state.goals, entries: state.entries, exercises: state.exercises, sets: state.sets,
+    goals: state.goals, entries: state.entries, folders: state.folders, exercises: state.exercises, sets: state.sets,
   };
   const json = JSON.stringify(data, null, 2);
   const name = `protracker-backup-${today()}.json`;
@@ -2270,20 +2578,24 @@ $('#importFile').addEventListener('change', async (ev) => {
   try {
     const data = normalize(JSON.parse(await file.text()));
     const hasGoals = !data.goals[0].def;
-    if (!data.entries.length && !data.exercises.length && !hasGoals) throw new Error('leer');
+    if (!data.entries.length && !data.exercises.length && !data.folders.length && !hasGoals) throw new Error('leer');
     const ids = new Set(state.entries.map((e) => e.id));
     const fresh = data.entries.filter((e) => !ids.has(e.id));
+    const foIds = new Set(state.folders.map((x) => x.id));
+    const freshFo = data.folders.filter((x) => !foIds.has(x.id));
     const exIds = new Set(state.exercises.map((x) => x.id));
     const freshEx = data.exercises.filter((x) => !exIds.has(x.id));
     const setIds = new Set(state.sets.map((x) => x.id));
     const freshSets = data.sets.filter((x) => !setIds.has(x.id));
-    if (!fresh.length && !freshEx.length && !freshSets.length) { toast('Alles aus dem Backup ist schon vorhanden.'); return; }
+    if (!fresh.length && !freshFo.length && !freshEx.length && !freshSets.length) { toast('Alles aus dem Backup ist schon vorhanden.'); return; }
     const parts = [];
     if (fresh.length) parts.push(`${fresh.length} Protein-${fresh.length === 1 ? 'Eintrag' : 'Einträge'}`);
+    if (freshFo.length) parts.push(`${freshFo.length} Ordner`);
     if (freshEx.length) parts.push(`${freshEx.length} ${freshEx.length === 1 ? 'Übung' : 'Übungen'}`);
     if (freshSets.length) parts.push(`${freshSets.length} ${freshSets.length === 1 ? 'Trainingssatz' : 'Trainingssätze'}`);
     if (!confirm(`${parts.join(', ')} aus dem Backup übernehmen? Vorhandene Daten bleiben erhalten.`)) return;
     state.entries = state.entries.concat(fresh);
+    state.folders = state.folders.concat(freshFo);
     state.exercises = state.exercises.concat(freshEx);
     state.sets = state.sets.concat(freshSets);
     if (!data.goals[0].def) {
@@ -2307,6 +2619,7 @@ $('#wipeBtn').addEventListener('click', () => {
   viewDate = today();
   prefilledFor = null;
   curEx = null;
+  curFolder = null;
   renderSettings();
   toast('Alle Daten gelöscht');
 });
@@ -2345,6 +2658,7 @@ function tick() {
     if (view === 'today') renderToday(false);
     if (view === 'stats') renderStats();
     if (view === 'training') renderTraining();
+    if (view === 'folder') renderFolder();
     if (view === 'exercise') { if (setDateAuto) $('#setDate').value = t; renderExercise(); }
   }
   if (timeAuto && document.activeElement !== elTime) elTime.value = nowTime();
@@ -2355,15 +2669,17 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) tick
 window.addEventListener('storage', (e) => {
   if (e.key !== KEY) return;
   state = load();
-  showView(view, curEx, { fromPop: true, keepScroll: true, noSave: true });
+  showView(view, curArg(), { fromPop: true, keepScroll: true, noSave: true });
 });
 
 // Start: normalerweise "Heute". Wer vor kurzem im Training war (z. B. im Studio), landet wieder dort.
 setTimeAuto(true);
 (function start() {
   const ar = state.ui.area;
-  if (ar && Date.now() - (Number(ar.t) || 0) < 3 * 3600 * 1000 && (ar.v === 'training' || ar.v === 'exercise')) showView(ar.v, ar.ex);
-  else showView('today');
+  if (ar && Date.now() - (Number(ar.t) || 0) < 3 * 3600 * 1000 && TRAIN.includes(ar.v)) {
+    tab = 'settings';
+    showView(ar.v, ar.a !== undefined ? ar.a : ar.ex);
+  } else showView('today');
 })();
 
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
