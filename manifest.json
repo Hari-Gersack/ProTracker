@@ -1,6 +1,6 @@
 {
-  "name": "Protein-Tracker",
-  "short_name": "Protein",
+  "name": "ProTracker",
+  "short_name": "ProTracker",
   "description": "Tägliche Proteinzufuhr eintragen, Ziel verfolgen und Durchschnitte auswerten.",
   "lang": "de",
   "dir": "ltr",
