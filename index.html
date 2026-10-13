@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Protein</title>
-<meta name="description" content="Tägliche Proteinzufuhr eintragen, Ziel verfolgen und Durchschnitte auswerten.">
+<title>ProTracker</title>
+<meta name="description" content="Tägliche Proteinzufuhr eintragen, Ziel verfolgen und Trainingsfortschritt festhalten.">
 <meta name="theme-color" content="#f3f2f7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#101122" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -38,6 +38,7 @@
   --danger:#c62f3a;
   --tab-bg:rgba(255,255,255,.86);
   --shadow:0 1px 2px rgba(28,32,51,.06);
+  --tr-accent:#4a55c9;
   --font:ui-rounded,"SF Pro Rounded","Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
   --sat:env(safe-area-inset-top,0px);
   --sab:env(safe-area-inset-bottom,0px);
@@ -62,8 +63,17 @@
     --danger:#ff6f78;
     --tab-bg:rgba(27,29,51,.86);
     --shadow:none;
+    --tr-accent:#7480ec;
   }
 }
+/* Trainingsbereich: eigene Akzentfarbe (Indigo) statt Pink */
+body.area-training{--accent:#4a55c9;--accent-text:#3c47b5;--accent-soft:#e0e3fb;--btn:#4a55c9}
+@media (prefers-color-scheme:dark){
+  body.area-training{--accent:#7480ec;--accent-text:#a9b0f7;--accent-soft:#2b2f63;--btn:#5560d6}
+}
+body.area-training .tabbar{display:none}
+body.area-training main{padding-bottom:calc(40px + var(--sab))}
+body.area-training .toast{bottom:calc(24px + var(--sab))}
 
 *{box-sizing:border-box}
 [hidden]{display:none !important}
@@ -181,6 +191,7 @@ input[type="time"]::-webkit-date-and-time-value,input[type="date"]::-webkit-date
 .seg{display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface-2);border-radius:12px;padding:3px;gap:2px}
 .seg button{border:0;background:none;border-radius:9px;padding:8px 2px;font-size:14px;font-weight:800;color:var(--ink-2)}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.seg button:disabled{opacity:.35}
 .custom{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .rangelabel{margin:14px 4px 0;font-size:15px;font-weight:700;color:var(--ink-2)}
 .stathero{padding:20px 4px 18px}
@@ -259,6 +270,62 @@ table.days td.zero{color:var(--muted)}
 ol.steps{margin:8px 0 0;padding-left:22px;font-size:15px;color:var(--ink-2)}
 ol.steps li{margin:4px 0}
 
+/* ---------- Zugang zum Training ---------- */
+.topbar{display:flex;justify-content:flex-end;margin:0 0 4px}
+.trainbtn{
+  display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;background:var(--surface);
+  box-shadow:var(--shadow);padding:7px 14px 7px 10px;font-size:14px;font-weight:800;color:var(--ink-2);
+}
+.trainbtn svg{width:20px;height:20px;color:var(--tr-accent);flex:none}
+.trainbtn:active{transform:scale(.97)}
+
+/* ---------- Training ---------- */
+.navrow{display:flex;justify-content:space-between;align-items:center;min-height:44px;margin:0 -6px}
+.backbtn,.textbtn{display:inline-flex;align-items:center;gap:1px;border:0;background:none;color:var(--accent-text);font-size:17px;font-weight:700;padding:8px 6px}
+.backbtn svg{width:22px;height:22px}
+.navrow + h1{margin-top:2px}
+.h1sub{margin:-10px 0 16px;font-size:15px;color:var(--ink-2)}
+.exlist{list-style:none;margin:0;padding:0;background:var(--surface);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.exlist li + li{border-top:1px solid var(--line)}
+.exlist button{width:100%;display:grid;grid-template-columns:1fr 72px 16px;gap:12px;align-items:center;border:0;background:none;padding:14px 16px;text-align:left}
+.exlist button:active{background:var(--surface-2)}
+.exlist .txt{min-width:0}
+.exlist .exn{display:block;font-size:18px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.exlist .exs{display:block;font-size:14px;color:var(--ink-2);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.exlist .chev{width:16px;height:16px;color:var(--muted)}
+.spark{width:72px;height:30px;display:block;overflow:visible}
+.spark path{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.spark circle{fill:var(--accent)}
+.withsuffix.kg .input{padding-right:50px}
+.panelsets{margin-top:16px;border-top:1px solid var(--line);padding-top:6px}
+.dghead{display:flex;justify-content:space-between;gap:10px;font-size:14px;font-weight:800;color:var(--ink-2);padding:6px 0 2px}
+.setrows{list-style:none;margin:0;padding:0}
+.setrows li + li{border-top:1px solid var(--line)}
+.setrows button{width:100%;display:grid;grid-template-columns:30px 1fr auto 16px;gap:8px;align-items:center;border:0;background:none;padding:11px 0;text-align:left;font-size:17px}
+.setrows .no{color:var(--muted);font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
+.setrows .w{font-weight:800;font-variant-numeric:tabular-nums}
+.setrows .chev{width:16px;height:16px;color:var(--muted)}
+.badge{font-size:12px;font-weight:800;color:var(--accent-text);background:var(--accent-soft);border-radius:999px;padding:3px 9px;white-space:nowrap}
+.dgroup + .dgroup{border-top:1px solid var(--line);margin-top:6px;padding-top:4px}
+.seg.five{grid-template-columns:repeat(5,1fr)}
+.seg.five button{font-size:13px}
+.seg.three{grid-template-columns:repeat(3,1fr);margin-top:12px}
+.sechead{margin:26px 4px 12px}
+.prog{padding:16px 2px 4px}
+.prog .bignum{font-size:56px}
+.prog .bignum .unit{font-size:26px}
+.pglbl{font-size:15px;font-weight:700;color:var(--ink-2);margin-top:6px}
+.delta{display:flex;align-items:center;gap:5px;margin-top:6px;font-size:16px;font-weight:800;color:var(--ink-2)}
+.delta.up{color:var(--good-text)}
+.delta svg{width:18px;height:18px;flex:none}
+.lpath{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.larea{fill:var(--accent);opacity:.1}
+.ldot{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.xhair{stroke:var(--muted);stroke-width:1}
+.endlbl{fill:var(--ink);font-size:12px;font-weight:850;font-family:var(--font);font-variant-numeric:tabular-nums}
+.card .tiles{box-shadow:none}
+#exTiles{margin-top:14px}
+
 /* ---------- tab bar ---------- */
 .tabbar{
   position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;
@@ -309,6 +376,12 @@ dialog[open]{animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
 <main>
   <!-- ================= HEUTE ================= -->
   <section id="view-today" aria-label="Heute">
+    <div class="topbar">
+      <button type="button" class="trainbtn" id="openTraining">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/></svg>
+        Training
+      </button>
+    </div>
     <div class="hint" id="installHint" hidden>
       <p>Als App installieren: In Safari auf <strong>Teilen</strong>
         <svg class="shareicon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3M8 7l4-4 4 4"/><path d="M6 11H5a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2h-1"/></svg>
@@ -480,10 +553,99 @@ dialog[open]{animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
 
     <div class="group">
       <h2>Zurücksetzen</h2>
-      <p>Löscht alle Einträge und Einstellungen auf diesem Gerät.</p>
+      <p>Löscht alle Protein- und Trainingsdaten und Einstellungen auf diesem Gerät.</p>
       <button class="btn2 danger" id="wipeBtn" type="button">Alle Daten löschen</button>
     </div>
-    <p class="version">Protein-Tracker 1.0</p>
+    <p class="version">ProTracker 1.1</p>
+  </section>
+
+  <!-- ================= TRAINING: Übungen ================= -->
+  <section id="view-training" aria-label="Training" hidden>
+    <div class="navrow">
+      <button type="button" class="backbtn" id="trBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Protein</button>
+    </div>
+    <h1>Training</h1>
+    <ul class="exlist" id="exList"></ul>
+    <p class="empty" id="exEmpty" hidden>Leg deine erste Übung an. Dort trägst du dann deine Sätze ein und siehst, wie sich deine Gewichte entwickeln.</p>
+    <button type="button" class="primary" id="addExBtn">Übung hinzufügen</button>
+  </section>
+
+  <!-- ================= TRAINING: einzelne Übung ================= -->
+  <section id="view-exercise" aria-label="Übung" hidden>
+    <div class="navrow">
+      <button type="button" class="backbtn" id="exBack"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Übungen</button>
+      <button type="button" class="textbtn" id="exEdit">Bearbeiten</button>
+    </div>
+    <h1 id="exTitle"></h1>
+    <p class="h1sub" id="exRecord"></p>
+
+    <form class="panel" id="setForm" autocomplete="off" novalidate>
+      <div class="formrow">
+        <label class="field">
+          <span class="lbl">Gewicht</span>
+          <span class="withsuffix kg"><input class="input num" id="setKg" inputmode="decimal" enterkeyhint="done" placeholder="0" aria-label="Gewicht in Kilogramm"><span class="suffix">kg</span></span>
+        </label>
+        <label class="field">
+          <span class="lbl">Wiederholungen</span>
+          <input class="input num" id="setReps" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done" placeholder="0" aria-label="Wiederholungen">
+        </label>
+      </div>
+      <div class="field" style="margin-top:12px">
+        <span class="lbl"><label for="setDate">Datum</label><button type="button" class="nowchip" id="setToday" aria-pressed="true">Heute</button></span>
+        <input class="input small num" type="date" id="setDate">
+      </div>
+      <p class="formerror" id="setError" hidden></p>
+      <button class="primary" type="submit">Satz eintragen</button>
+      <div class="panelsets" id="formSetsWrap" hidden>
+        <div class="dghead"><span id="formSetsLbl"></span><span id="formSetsCnt"></span></div>
+        <ul class="setrows" id="formSets"></ul>
+      </div>
+    </form>
+
+    <div id="exProgress">
+      <div class="listhead sechead"><h2>Fortschritt</h2></div>
+      <div class="seg five" id="trRange" role="group" aria-label="Zeitraum">
+        <button type="button" data-range="30">1 Mon.</button>
+        <button type="button" data-range="90">3 Mon.</button>
+        <button type="button" data-range="365">1 Jahr</button>
+        <button type="button" data-range="all">Alle</button>
+        <button type="button" data-range="custom">Eigener</button>
+      </div>
+      <div class="custom" id="trCustom" hidden>
+        <label class="field"><span class="lbl">Von</span><input class="input small num" type="date" id="trFrom"></label>
+        <label class="field"><span class="lbl">Bis</span><input class="input small num" type="date" id="trTo"></label>
+      </div>
+      <p class="rangelabel" id="trRangeLabel"></p>
+
+      <section class="card" id="exChartCard">
+        <div class="seg three" id="trMetric" role="group" aria-label="Messgröße" style="margin-top:0">
+          <button type="button" data-metric="kg">Gewicht</button>
+          <button type="button" data-metric="e1">1RM</button>
+          <button type="button" data-metric="reps">Wdh.</button>
+        </div>
+        <p class="sub" id="metricNote" style="margin-top:10px"></p>
+        <div class="prog">
+          <div class="bignum"><span id="pgNum"></span><span class="unit" id="pgUnit"></span></div>
+          <div class="pglbl" id="pgLbl"></div>
+          <div class="delta" id="pgDelta"></div>
+        </div>
+        <div class="chart" id="chartEx"></div>
+      </section>
+
+      <div class="tiles" id="exTiles">
+        <div class="tile"><div class="k" id="xt1k">Bestes Gewicht</div><div class="v" id="xt1"></div><div class="d" id="xt1d"></div></div>
+        <div class="tile"><div class="k">Geschätztes 1RM</div><div class="v" id="xt2"></div><div class="d" id="xt2d"></div></div>
+        <div class="tile"><div class="k">Trainingstage</div><div class="v" id="xt3"></div><div class="d" id="xt3d"></div></div>
+        <div class="tile"><div class="k">Sätze</div><div class="v" id="xt4"></div><div class="d" id="xt4d"></div></div>
+      </div>
+      <p class="empty" id="exRangeEmpty" hidden style="margin-top:14px"></p>
+    </div>
+
+    <section class="card" id="exHistoryCard">
+      <h2>Alle Trainings</h2>
+      <div id="exHistory"></div>
+      <button class="linkbtn" id="exMore" hidden></button>
+    </section>
   </section>
 </main>
 
@@ -522,6 +684,43 @@ dialog[open]{animation:sheet .26s cubic-bezier(.2,.8,.2,1)}
       <button class="primary" type="submit" id="eSave">Speichern</button>
     </div>
     <button class="delbtn" type="button" id="eDelete">Eintrag löschen</button>
+  </form>
+</dialog>
+
+<dialog id="exDialog" aria-labelledby="exDlgTitle">
+  <form class="sheet" id="exForm" novalidate autocomplete="off">
+    <div class="grab"></div>
+    <h2 id="exDlgTitle" tabindex="-1" autofocus>Übung hinzufügen</h2>
+    <label class="field"><span class="lbl">Name</span>
+      <input class="input" id="exNameInput" maxlength="40" placeholder="z. B. Bankdrücken" enterkeyhint="done" autocapitalize="sentences">
+    </label>
+    <div class="chips" id="exSuggest" role="group" aria-label="Vorschläge"></div>
+    <p class="formerror" id="exError" hidden></p>
+    <div class="sheetbtns">
+      <button class="btn2" type="button" id="exCancel">Abbrechen</button>
+      <button class="primary" type="submit" id="exSave">Hinzufügen</button>
+    </div>
+    <button class="delbtn" type="button" id="exDelete" hidden>Übung löschen</button>
+  </form>
+</dialog>
+
+<dialog id="setDialog" aria-labelledby="setDlgTitle">
+  <form class="sheet" id="setEditForm" novalidate autocomplete="off">
+    <div class="grab"></div>
+    <h2 id="setDlgTitle" tabindex="-1" autofocus>Satz bearbeiten</h2>
+    <div class="formrow">
+      <label class="field"><span class="lbl">Gewicht</span>
+        <span class="withsuffix kg"><input class="input num" id="sKg" inputmode="decimal" enterkeyhint="done"><span class="suffix">kg</span></span>
+      </label>
+      <label class="field"><span class="lbl">Wiederholungen</span><input class="input num" id="sReps" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done"></label>
+    </div>
+    <label class="field" style="margin-top:12px"><span class="lbl">Datum</span><input class="input small num" type="date" id="sDate"></label>
+    <p class="formerror" id="sError" hidden></p>
+    <div class="sheetbtns">
+      <button class="btn2" type="button" id="sCancel">Abbrechen</button>
+      <button class="primary" type="submit">Speichern</button>
+    </div>
+    <button class="delbtn" type="button" id="sDelete">Satz löschen</button>
   </form>
 </dialog>
 
@@ -577,6 +776,24 @@ function parseAmount(str) {
   return v > 0 && v <= 2000 ? v : null;
 }
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const NF2 = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 2, useGrouping: false });
+const fkg = (v) => NF2.format(Math.round(v * 100) / 100);
+const fin = (v) => NF2.format(Math.round(v * 100) / 100); // Werte für Eingabefelder, ohne Tausenderpunkt
+function parseKg(str) {
+  if (str == null) return null;
+  const clean = String(str).trim().replace(/\s/g, '').replace(',', '.');
+  if (!/^\d*\.?\d+$|^\d+\.?$/.test(clean)) return null;
+  const v = Math.round(parseFloat(clean) * 100) / 100;
+  return v >= 0 && v <= 1000 ? v : null;
+}
+function parseReps(str) {
+  const clean = String(str == null ? '' : str).trim();
+  if (!/^\d{1,3}$/.test(clean)) return null;
+  const v = parseInt(clean, 10);
+  return v >= 1 && v <= 500 ? v : null;
+}
+const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fromDayNum = (n) => { const d = new Date(n * 864e5); return new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 12); };
 
 /* =========================================================
    Speicher
@@ -595,7 +812,20 @@ function normalize(s) {
     note: typeof e.note === 'string' ? e.note.slice(0, 40) : '',
   })) : [];
   const ui = Object.assign({ range: '30', from: null, to: null }, s.ui && typeof s.ui === 'object' ? s.ui : {});
-  return { v: 1, goals, entries, ui, hintClosed: !!s.hintClosed };
+  ui.tr = Object.assign({ range: 'all', from: null, to: null, metric: 'kg' }, ui.tr && typeof ui.tr === 'object' ? ui.tr : {});
+  if (!ui.area || typeof ui.area !== 'object') ui.area = null;
+
+  // Training
+  const exercises = Array.isArray(s.exercises) ? s.exercises
+    .filter((x) => x && typeof x.name === 'string' && x.name.trim())
+    .map((x) => ({ id: String(x.id || uid()), name: x.name.trim().slice(0, 40), created: Number(x.created) || 0 })) : [];
+  const exIds = new Set(exercises.map((x) => x.id));
+  const sets = Array.isArray(s.sets) ? s.sets
+    .filter((x) => x && exIds.has(String(x.ex)) && isDate(x.date) && typeof x.kg === 'number' && isFinite(x.kg)
+      && x.kg >= 0 && x.kg <= 1000 && Number.isInteger(x.reps) && x.reps >= 1 && x.reps <= 500)
+    .map((x) => ({ id: String(x.id || uid()), ex: String(x.ex), date: x.date, kg: Math.round(x.kg * 100) / 100, reps: x.reps, t: Number(x.t) || 0 })) : [];
+
+  return { v: 1, goals, entries, exercises, sets, ui, hintClosed: !!s.hintClosed };
 }
 function load() {
   try { const raw = localStorage.getItem(KEY); if (raw) return normalize(JSON.parse(raw)); } catch (e) { /* leer */ }
@@ -642,22 +872,57 @@ function currentStreak(map) {
 /* =========================================================
    Navigation
    ========================================================= */
-let tab = 'today';
-function showTab(name) {
-  tab = name;
+const VIEWS = ['today', 'stats', 'settings', 'training', 'exercise'];
+const MAIN = ['today', 'stats', 'settings'];
+let tab = 'today';      // zuletzt genutzter Haupt-Tab
+let view = 'today';     // aktuell sichtbare Ansicht
+let curEx = null;       // geöffnete Übung
+let navDepth = 0;       // wie viele Schritte wir selbst in die History gelegt haben
+
+function showView(v, ex, opts = {}) {
+  if (!VIEWS.includes(v)) v = 'today';
+  if (v === 'exercise' && !state.exercises.some((x) => x.id === ex)) v = 'training';
+  view = v;
+  if (MAIN.includes(v)) tab = v;
+  if (v === 'exercise') curEx = ex;
   hideToast();
-  $('#view-today').hidden = name !== 'today';
-  $('#view-stats').hidden = name !== 'stats';
-  $('#view-settings').hidden = name !== 'settings';
+  VIEWS.forEach((n) => { $('#view-' + n).hidden = n !== v; });
+  const inTraining = v === 'training' || v === 'exercise';
+  document.body.classList.toggle('area-training', inTraining);
   $$('.tabbar button').forEach((b) => {
-    if (b.dataset.tab === name) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    if (b.dataset.tab === v) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
   });
-  window.scrollTo(0, 0);
-  if (name === 'stats') renderStats();
-  if (name === 'settings') renderSettings();
-  if (name === 'today') renderToday(false);
+  if (!opts.keepScroll) window.scrollTo(0, 0);
+
+  const hs = { pt: 1, v, ex: v === 'exercise' ? curEx : null, d: navDepth };
+  try {
+    if (opts.push) { navDepth++; hs.d = navDepth; history.pushState(hs, ''); }
+    else if (!opts.fromPop) history.replaceState(hs, '');
+  } catch (e) { /* History nicht verfügbar */ }
+
+  // Trainingsbereich merken, damit die App nach einem Neustart im Studio dort weitermacht
+  if (!opts.noSave) {
+    state.ui.area = inTraining ? { v, ex: v === 'exercise' ? curEx : null, t: Date.now() } : null;
+    save();
+  }
+
+  if (v === 'stats') renderStats();
+  if (v === 'settings') renderSettings();
+  if (v === 'today') renderToday(false);
+  if (v === 'training') renderTraining();
+  if (v === 'exercise') renderExercise();
 }
-$$('.tabbar button').forEach((b) => b.addEventListener('click', () => showTab(b.dataset.tab)));
+function navBack() {
+  if (navDepth > 0) { history.back(); return; }
+  if (view === 'exercise') showView('training'); else showView(tab);
+}
+window.addEventListener('popstate', (e) => {
+  const s = e.state;
+  $$('dialog[open]').forEach((d) => d.close());
+  if (s && s.pt) { navDepth = s.d || 0; showView(s.v, s.ex, { fromPop: true }); }
+  else { navDepth = 0; showView(tab, null, { fromPop: true }); }
+});
+$$('.tabbar button').forEach((b) => b.addEventListener('click', () => showView(b.dataset.tab)));
 
 /* =========================================================
    HEUTE
@@ -786,7 +1051,7 @@ function renderChips() {
       b.textContent = `${fg(it.g)} g`;
     }
     b.addEventListener('click', () => {
-      elAmount.value = fg(it.g);
+      elAmount.value = fin(it.g);
       elNote.value = it.note || '';
       $('#formError').hidden = true;
     });
@@ -827,7 +1092,8 @@ $('#dayPicker').addEventListener('change', (e) => {
   const v = e.target.value;
   if (isDate(v)) { viewDate = v > today() ? today() : v; renderToday(false); }
 });
-$('#goalLink').addEventListener('click', () => { showTab('settings'); setTimeout(() => $('#goalInput').focus(), 50); });
+$('#goalLink').addEventListener('click', () => { showView('settings'); setTimeout(() => $('#goalInput').focus(), 50); });
+$('#openTraining').addEventListener('click', () => showView('training', null, { push: true }));
 $('#closeHint').addEventListener('click', () => { state.hintClosed = true; save(); $('#installHint').hidden = true; });
 
 /* ---------- Shaker ---------- */
@@ -879,7 +1145,7 @@ function openEdit(id) {
   const e = state.entries.find((x) => x.id === id);
   if (!e) return;
   editId = id;
-  $('#eAmount').value = fg(e.g);
+  $('#eAmount').value = fin(e.g);
   $('#eTime').value = e.time;
   $('#eDate').value = e.date;
   $('#eDate').max = today();
@@ -1331,18 +1597,626 @@ $$('.seg button').forEach((b) => b.addEventListener('click', () => {
 let rsT = 0;
 window.addEventListener('resize', () => {
   clearTimeout(rsT);
-  rsT = setTimeout(() => { if (tab === 'stats') renderStats(); }, 150);
+  rsT = setTimeout(() => {
+    if (view === 'stats') renderStats();
+    if (view === 'exercise') renderExProgress();
+  }, 150);
+});
+
+/* =========================================================
+   TRAINING
+   ========================================================= */
+const SUGGEST = ['Bankdrücken', 'Kniebeugen', 'Kreuzheben', 'Schulterdrücken', 'Rudern', 'Klimmzüge', 'Latzug', 'Beinpresse', 'Schrägbankdrücken', 'Bizepscurls', 'Dips', 'Hip Thrust'];
+const CHEV = '<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5L10.5 8 6 12.5"/></svg>';
+const ARROW_UP = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5.5 11.5L12 5l6.5 6.5"/></svg>';
+const ARROW_DOWN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5.5 12.5L12 19l6.5-6.5"/></svg>';
+
+// Geschätztes Maximalgewicht für 1 Wiederholung (Epley)
+const e1rm = (kg, reps) => (reps <= 1 ? kg : kg * (1 + reps / 30));
+const fmtSet = (s) => (s.kg > 0 ? `${fkg(s.kg)} kg × ${s.reps}` : `${s.reps} Wdh.`);
+const satz = (n) => `${n} ${n === 1 ? 'Satz' : 'Sätze'}`;
+function ago(date) {
+  const d = daysBetween(date, today());
+  if (d <= 0) return 'heute';
+  if (d === 1) return 'gestern';
+  if (d < 7) return `vor ${d} Tagen`;
+  return 'am ' + fd(date, 'dmon');
+}
+const byChrono = (a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : a.t - b.t);
+
+function exData(id) {
+  const sets = state.sets.filter((s) => s.ex === id).sort(byChrono);
+  // Rekorde: schwerer als alles davor (ohne Zusatzgewicht: mehr Wiederholungen als je zuvor)
+  const pr = new Set();
+  let maxKg = -1, maxReps0 = 0;
+  sets.forEach((s, i) => {
+    if (i > 0 && (s.kg > maxKg || (s.kg === 0 && maxKg === 0 && s.reps > maxReps0))) pr.add(s.id);
+    if (s.kg > maxKg) maxKg = s.kg;
+    if (s.kg === 0) maxReps0 = Math.max(maxReps0, s.reps);
+  });
+  const groups = new Map();
+  for (const s of sets) { if (!groups.has(s.date)) groups.set(s.date, []); groups.get(s.date).push(s); }
+  const sessions = [...groups.entries()].map(([date, ss]) => {
+    let top = ss[0], e1 = -1, e1set = ss[0], maxReps = 0;
+    for (const s of ss) {
+      if (s.kg > top.kg || (s.kg === top.kg && s.reps > top.reps)) top = s;
+      const e = e1rm(s.kg, s.reps);
+      if (e > e1) { e1 = e; e1set = s; }
+      maxReps = Math.max(maxReps, s.reps);
+    }
+    return { date, sets: ss, top, e1, e1set, maxReps };
+  });
+  let best = null;
+  for (const s of sets) if (!best || s.kg > best.kg || (s.kg === best.kg && s.reps > best.reps)) best = s;
+  return { sets, sessions, pr, best, bodyweight: sets.length > 0 && maxKg === 0 };
+}
+
+/* ---------- Übungsliste ---------- */
+function sparkSVG(vals) {
+  if (vals.length < 2) return '<span></span>';
+  const w = 72, h = 30, p = 4, n = vals.length;
+  const lo = Math.min(...vals), hi = Math.max(...vals);
+  const pts = vals.map((v, i) => [p + (i / (n - 1)) * (w - 2 * p), hi === lo ? h / 2 : h - p - ((v - lo) / (hi - lo)) * (h - 2 * p)]);
+  const d = pts.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join('');
+  const last = pts[n - 1];
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" aria-hidden="true"><path d="${d}"/><circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="3"/></svg>`;
+}
+function renderTraining() {
+  const list = $('#exList');
+  list.textContent = '';
+  const items = state.exercises.map((x) => { const D = exData(x.id); return { x, D, last: D.sessions[D.sessions.length - 1] || null }; });
+  items.sort((a, b) => {
+    const ka = a.last ? a.last.date : '', kb = b.last ? b.last.date : '';
+    if (ka !== kb) return ka < kb ? 1 : -1;
+    return (b.x.created || 0) - (a.x.created || 0);
+  });
+  $('#exEmpty').hidden = items.length > 0;
+  list.hidden = items.length === 0;
+  $('#addExBtn').className = items.length ? 'btn2' : 'primary';
+  for (const it of items) {
+    const li = document.createElement('li');
+    const b = document.createElement('button');
+    b.type = 'button';
+    const txt = document.createElement('span'); txt.className = 'txt';
+    const nm = document.createElement('span'); nm.className = 'exn'; nm.textContent = it.x.name;
+    const sb = document.createElement('span'); sb.className = 'exs';
+    sb.textContent = it.last ? `${fmtSet(it.last.top)}, ${ago(it.last.date)}` : 'Noch keine Sätze';
+    txt.append(nm, sb);
+    b.appendChild(txt);
+    const vals = it.D.sessions.slice(-12).map((ss) => (it.D.bodyweight ? ss.maxReps : ss.top.kg));
+    b.insertAdjacentHTML('beforeend', sparkSVG(vals) + CHEV);
+    b.addEventListener('click', () => openExercise(it.x.id));
+    li.appendChild(b);
+    list.appendChild(li);
+  }
+}
+function openExercise(id) { showView('exercise', id, { push: true }); }
+$('#trBack').addEventListener('click', navBack);
+$('#exBack').addEventListener('click', navBack);
+
+/* ---------- Übung: Sätze eintragen ---------- */
+let prefilledFor = null;
+let setDateAuto = true;
+let showAllSessions = false;
+function setSetDateAuto(on) {
+  setDateAuto = on;
+  $('#setToday').setAttribute('aria-pressed', on ? 'true' : 'false');
+  if (on) $('#setDate').value = today();
+}
+function formDate() {
+  const v = $('#setDate').value;
+  return setDateAuto || !isDate(v) ? today() : v;
+}
+
+function renderExercise() {
+  const ex = state.exercises.find((x) => x.id === curEx);
+  if (!ex) return;
+  const D = exData(ex.id);
+  if (prefilledFor !== ex.id) {
+    prefilledFor = ex.id;
+    showAllSessions = false;
+    const last = D.sets[D.sets.length - 1];
+    $('#setKg').value = last ? fin(last.kg) : '';
+    $('#setReps').value = last ? String(last.reps) : '';
+    $('#setError').hidden = true;
+    setSetDateAuto(true);
+  }
+  $('#setDate').max = today();
+  $('#exTitle').textContent = ex.name;
+  $('#exRecord').textContent = D.best ? `Rekord: ${fmtSet(D.best)} am ${fd(D.best.date, 'dmy')}` : 'Noch keine Sätze eingetragen';
+  renderFormSets(D);
+  renderExProgress(D);
+  renderExHistory(D);
+}
+
+function setRow(s, no, isPR) {
+  const li = document.createElement('li');
+  const b = document.createElement('button');
+  b.type = 'button';
+  const n = document.createElement('span'); n.className = 'no'; n.textContent = no + '.';
+  const w = document.createElement('span'); w.className = 'w'; w.textContent = fmtSet(s);
+  const r = document.createElement('span');
+  if (isPR) { r.className = 'badge'; r.textContent = 'Rekord'; }
+  b.append(n, w, r);
+  b.insertAdjacentHTML('beforeend', CHEV);
+  b.setAttribute('aria-label', `Satz ${no}: ${fmtSet(s)}${isPR ? ', Rekord' : ''}. Bearbeiten`);
+  b.addEventListener('click', () => openSetEdit(s.id));
+  li.appendChild(b);
+  return li;
+}
+function renderFormSets(D) {
+  const d = formDate();
+  const sess = D.sessions.find((x) => x.date === d);
+  $('#formSetsWrap').hidden = !sess;
+  if (!sess) return;
+  $('#formSetsLbl').textContent = d === today() ? 'Heute' : fd(d, 'short');
+  $('#formSetsCnt').textContent = satz(sess.sets.length);
+  const ul = $('#formSets');
+  ul.textContent = '';
+  sess.sets.forEach((s, i) => ul.appendChild(setRow(s, i + 1, D.pr.has(s.id))));
+}
+function renderExHistory(D) {
+  const box = $('#exHistory');
+  box.textContent = '';
+  $('#exHistoryCard').hidden = !D.sessions.length;
+  const ss = D.sessions.slice().reverse();
+  const lim = showAllSessions ? ss.length : Math.min(ss.length, 5);
+  const year = today().slice(0, 4);
+  for (let i = 0; i < lim; i++) {
+    const se = ss[i];
+    const g = document.createElement('div'); g.className = 'dgroup';
+    const h = document.createElement('div'); h.className = 'dghead';
+    const a = document.createElement('span'); a.textContent = fd(se.date, se.date.slice(0, 4) === year ? 'short' : 'dmy');
+    const c = document.createElement('span'); c.textContent = satz(se.sets.length);
+    h.append(a, c);
+    const ul = document.createElement('ul'); ul.className = 'setrows';
+    se.sets.forEach((s, j) => ul.appendChild(setRow(s, j + 1, D.pr.has(s.id))));
+    g.append(h, ul);
+    box.appendChild(g);
+  }
+  const more = $('#exMore');
+  more.hidden = ss.length <= 5;
+  more.textContent = showAllSessions ? 'Weniger anzeigen' : `Alle ${ss.length} Trainings anzeigen`;
+}
+$('#exMore').addEventListener('click', () => { showAllSessions = !showAllSessions; renderExHistory(exData(curEx)); });
+
+$('#setToday').addEventListener('click', () => { setSetDateAuto(true); renderFormSets(exData(curEx)); });
+$('#setDate').addEventListener('change', () => {
+  const v = $('#setDate').value;
+  if (!isDate(v) || v >= today()) setSetDateAuto(true);
+  else setSetDateAuto(false);
+  renderFormSets(exData(curEx));
+});
+$('#setForm').addEventListener('submit', (ev) => {
+  ev.preventDefault();
+  const kg = parseKg($('#setKg').value), reps = parseReps($('#setReps').value);
+  const err = $('#setError');
+  if (kg == null) { err.textContent = 'Gib das Gewicht in kg ein, zum Beispiel 60 oder 62,5. Ohne Zusatzgewicht: 0.'; err.hidden = false; $('#setKg').focus(); return; }
+  if (reps == null) { err.textContent = 'Gib die Anzahl der Wiederholungen ein, zum Beispiel 8.'; err.hidden = false; $('#setReps').focus(); return; }
+  err.hidden = true;
+  const set = { id: uid(), ex: curEx, date: formDate(), kg, reps, t: Date.now() };
+  state.sets.push(set);
+  if (!save()) { state.sets.pop(); return; }
+  $('#setKg').blur(); $('#setReps').blur();
+  const isPR = exData(curEx).pr.has(set.id);
+  renderExercise();
+  toast(isPR ? `Neuer Rekord: ${fmtSet(set)}` : `Satz eingetragen: ${fmtSet(set)}`, 'Rückgängig', () => {
+    state.sets = state.sets.filter((x) => x.id !== set.id);
+    save();
+    if (view === 'exercise') renderExercise();
+  });
+});
+
+/* ---------- Übung: Fortschritt ---------- */
+function trBounds(D) {
+  const t = today();
+  const tr = state.ui.tr;
+  if (tr.range === 'custom' && isDate(tr.from) && isDate(tr.to)) {
+    let a = tr.from, b = tr.to;
+    if (a > b) [a, b] = [b, a];
+    if (daysBetween(a, b) > 7320) a = addDays(b, -7320);
+    return [a, b];
+  }
+  if (tr.range === 'all') {
+    const f = D.sessions.length ? D.sessions[0].date : t;
+    return [f < t ? f : t, t];
+  }
+  const n = Number(tr.range) || 90;
+  return [addDays(t, -(n - 1)), t];
+}
+const METRIC = {
+  kg: { val: (s) => s.top.kg, fmt: (v) => fkg(v), unit: 'kg', name: 'Gewicht',
+    note: 'Schwerster Satz pro Trainingstag.' },
+  e1: { val: (s) => s.e1, fmt: (v) => fkg(Math.round(v * 2) / 2), unit: 'kg', name: 'Geschätztes 1RM',
+    note: 'Geschätztes Maximalgewicht für eine Wiederholung, berechnet aus deinem besten Satz des Tages. Macht Sätze mit unterschiedlich vielen Wiederholungen vergleichbar.' },
+  reps: { val: (s) => s.maxReps, fmt: (v) => fg0(v), unit: 'Wdh.', name: 'Wiederholungen',
+    note: 'Meiste Wiederholungen in einem Satz pro Trainingstag.' },
+};
+function setVal(sel, main, small) {
+  const el = $(sel);
+  el.textContent = main;
+  if (small) {
+    el.appendChild(document.createTextNode(' '));
+    const s = document.createElement('small'); s.textContent = small; el.appendChild(s);
+  }
+}
+
+function renderExProgress(D) {
+  if (!curEx) return;
+  if (!D) D = exData(curEx);
+  $('#exProgress').hidden = !D.sessions.length;
+  if (!D.sessions.length) return;
+  const tr = state.ui.tr;
+  $$('#trRange button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.range === tr.range ? 'true' : 'false'));
+  const [a, b] = trBounds(D);
+  $('#trCustom').hidden = tr.range !== 'custom';
+  if (tr.range === 'custom') { $('#trFrom').value = a; $('#trTo').value = b; }
+  $('#trRangeLabel').textContent = a === b ? fd(a, 'dmy') : `${fd(a, 'dmy')} bis ${fd(b, 'dmy')}`;
+
+  let mk = METRIC[tr.metric] ? tr.metric : 'kg';
+  if (D.bodyweight) mk = 'reps';
+  const M = METRIC[mk];
+  $$('#trMetric button').forEach((bt) => {
+    bt.setAttribute('aria-pressed', bt.dataset.metric === mk ? 'true' : 'false');
+    bt.disabled = D.bodyweight && bt.dataset.metric !== 'reps';
+  });
+  $('#metricNote').textContent = D.bodyweight
+    ? 'Du trainierst diese Übung ohne Zusatzgewicht, daher zählen die Wiederholungen: meiste Wiederholungen in einem Satz pro Trainingstag.'
+    : M.note;
+
+  const inR = D.sessions.filter((s) => s.date >= a && s.date <= b);
+  const has = inR.length > 0;
+  $('#exChartCard').hidden = !has;
+  $('#exTiles').hidden = !has;
+  $('#exRangeEmpty').hidden = has;
+  if (!has) {
+    $('#exRangeEmpty').textContent = 'In diesem Zeitraum hast du diese Übung nicht trainiert. Wähle einen anderen Zeitraum.';
+    return;
+  }
+
+  // Kennzahl oben: letztes Training und Veränderung im Zeitraum
+  const first = inR[0], last = inR[inR.length - 1];
+  const vF = M.val(first), vL = M.val(last);
+  $('#pgNum').textContent = M.fmt(vL);
+  $('#pgUnit').textContent = M.unit;
+  $('#pgUnit').style.marginLeft = mk === 'reps' ? '10px' : '';
+  $('#pgLbl').textContent = `Letztes Training am ${fd(last.date, 'short')}`;
+  const dl = $('#pgDelta');
+  dl.textContent = '';
+  dl.className = 'delta';
+  if (inR.length < 2) {
+    dl.textContent = 'Erster Trainingstag im Zeitraum';
+  } else {
+    const diff = vL - vF;
+    const since = ` seit ${fd(first.date, 'dmon')}`;
+    if (Math.abs(diff) < 0.01) dl.textContent = 'Unverändert' + since;
+    else {
+      const up = diff > 0;
+      if (up) dl.classList.add('up');
+      dl.innerHTML = up ? ARROW_UP : ARROW_DOWN;
+      const p = vF > 0 && mk !== 'reps' ? ` (${up ? '+' : '−'}${pct(Math.abs(diff) / vF)})` : '';
+      dl.appendChild(document.createTextNode(`${up ? '+' : '−'}${M.fmt(Math.abs(diff))} ${M.unit}${p}${since}`));
+    }
+  }
+
+  // Grafik
+  const pts = inR.map((s) => ({
+    x: dayNum(s.date), v: M.val(s),
+    tipValue: `${M.fmt(M.val(s))} ${M.unit}`,
+    tipTitle: fd(s.date, 'short'),
+    tipExtra: `${mk === 'e1' ? 'aus ' + fmtSet(s.e1set) : 'Top-Satz ' + fmtSet(s.top)}, ${satz(s.sets.length)}`,
+  }));
+  const ex = state.exercises.find((x) => x.id === curEx);
+  lineChart($('#chartEx'), {
+    points: pts, domain: [dayNum(a), dayNum(b)], intStep: mk === 'reps',
+    fmt: (v) => `${M.fmt(v)} ${M.unit}`,
+    aria: `${ex ? ex.name : 'Übung'}: ${M.name} vom ${fd(a, 'dmy')} bis ${fd(b, 'dmy')}`,
+  });
+
+  // Kacheln (alle bezogen auf den Zeitraum)
+  const setsR = inR.reduce((n, s) => n + s.sets.length, 0);
+  let bestS = null;
+  for (const s of inR) for (const x of s.sets) if (!bestS || x.kg > bestS.kg || (x.kg === bestS.kg && x.reps > bestS.reps)) bestS = x;
+  let bestE = inR[0];
+  for (const s of inR) if (s.e1 > bestE.e1) bestE = s;
+  if (D.bodyweight) {
+    $('#xt1k').textContent = 'Meiste Wdh.';
+    setVal('#xt1', String(bestS.reps));
+    $('#xt1d').textContent = fd(bestS.date, 'short');
+    setVal('#xt2', '–');
+    $('#xt2d').textContent = 'nur mit Zusatzgewicht';
+  } else {
+    $('#xt1k').textContent = 'Bestes Gewicht';
+    setVal('#xt1', fkg(bestS.kg), 'kg');
+    $('#xt1d').textContent = `× ${bestS.reps}, ${fd(bestS.date, 'dmon')}`;
+    setVal('#xt2', fkg(Math.round(bestE.e1 * 2) / 2), 'kg');
+    $('#xt2d').textContent = `aus ${fmtSet(bestE.e1set)}`;
+  }
+  setVal('#xt3', String(inR.length));
+  $('#xt3d').textContent = `zuletzt ${ago(last.date)}`;
+  setVal('#xt4', String(setsR));
+  $('#xt4d').textContent = `Ø ${fg(setsR / inR.length)} pro Training`;
+}
+
+$$('#trRange button').forEach((b) => b.addEventListener('click', () => {
+  const r = b.dataset.range, tr = state.ui.tr;
+  if (r === 'custom' && tr.range !== 'custom') {
+    const [a, bb] = trBounds(exData(curEx));
+    tr.from = isDate(tr.from) ? tr.from : a;
+    tr.to = isDate(tr.to) ? tr.to : bb;
+  }
+  tr.range = r;
+  save();
+  renderExProgress();
+}));
+['#trFrom', '#trTo'].forEach((id) => $(id).addEventListener('change', () => {
+  const f = $('#trFrom').value, t2 = $('#trTo').value;
+  if (isDate(f)) state.ui.tr.from = f;
+  if (isDate(t2)) state.ui.tr.to = t2;
+  save();
+  renderExProgress();
+}));
+$$('#trMetric button').forEach((b) => b.addEventListener('click', () => {
+  if (b.disabled) return;
+  state.ui.tr.metric = b.dataset.metric;
+  save();
+  renderExProgress();
+}));
+
+/* Liniendiagramm mit Zeitachse. points: {x (Tagnummer), v, tipValue, tipTitle, tipExtra} */
+function timeTicks(x0, x1) {
+  const span = x1 - x0, out = [];
+  if (span <= 75) {
+    const n = span < 6 ? Math.max(2, span + 1) : 4;
+    for (let k = 0; k < n; k++) {
+      const x = Math.round(x0 + (k * span) / (n - 1));
+      if (!out.length || out[out.length - 1].x !== x) out.push({ x, label: F.dm.format(fromDayNum(x)) });
+    }
+    return out;
+  }
+  const months = [];
+  const s0 = fromDayNum(x0);
+  let d = new Date(s0.getFullYear(), s0.getMonth() + 1, 1, 12);
+  while (dayNum(toStr(d)) <= x1) { months.push(d); d = new Date(d.getFullYear(), d.getMonth() + 1, 1, 12); }
+  const st = Math.ceil(months.length / 5) || 1;
+  months.forEach((dd, i) => {
+    if (i % st) return;
+    const lbl = F.mon.format(dd) + (dd.getMonth() === 0 ? ' ' + String(dd.getFullYear()).slice(2) : '');
+    out.push({ x: dayNum(toStr(dd)), label: lbl });
+  });
+  return out;
+}
+function lineChart(el, cfg) {
+  const pts = cfg.points;
+  const W = Math.max(260, Math.round(el.clientWidth || 320));
+  const H = cfg.height || 220;
+  const m = { l: 40, r: 12, t: 28, b: 26 };
+  const pw = W - m.l - m.r, ph = H - m.t - m.b;
+  let [x0, x1] = cfg.domain;
+  if (x1 - x0 < 2) { x0 -= 1; x1 += 1; }
+  const pad = 12;
+  const X = (x) => m.l + pad + ((x - x0) / (x1 - x0)) * (pw - 2 * pad);
+  let lo = Math.min(...pts.map((p) => p.v)), hi = Math.max(...pts.map((p) => p.v));
+  if (hi - lo < 1e-9) { const d0 = Math.max(cfg.intStep ? 2 : 2.5, hi * 0.1); lo -= d0; hi += d0; }
+  const span = hi - lo;
+  let step = niceStep(span / 3);
+  if (cfg.intStep) step = Math.max(1, Math.round(step));
+  const y0 = Math.max(0, Math.floor((lo - span * 0.12) / step) * step);
+  const y1 = Math.ceil((hi + span * 0.12) / step) * step;
+  const Y = (v) => m.t + ph - ((v - y0) / (y1 - y0)) * ph;
+  const base = m.t + ph;
+
+  let s = `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" tabindex="0" aria-label="${esc(cfg.aria)}">`;
+  for (let k = 0; y0 + k * step <= y1 + 1e-6; k++) {
+    const v = y0 + k * step;
+    const yy = Math.round(Y(v)) + 0.5;
+    s += `<line class="${k === 0 ? 'base' : 'grid'}" x1="${m.l}" x2="${W - m.r}" y1="${yy}" y2="${yy}"/>`;
+    s += `<text class="ax" x="${m.l - 6}" y="${yy + 3.5}" text-anchor="end">${NF2.format(Math.round(v * 100) / 100)}</text>`;
+  }
+  s += `<line class="xhair" x1="0" x2="0" y1="${m.t - 6}" y2="${base}" visibility="hidden"/>`;
+  const P = pts.map((p) => [X(p.x), Y(p.v)]);
+  if (pts.length > 1) {
+    const line = P.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(2) + ' ' + q[1].toFixed(2)).join('');
+    s += `<path class="larea" d="${line}L${P[P.length - 1][0].toFixed(2)} ${base}L${P[0][0].toFixed(2)} ${base}Z"/>`;
+    s += `<path class="lpath" d="${line}"/>`;
+  }
+  // Bei vielen Punkten nur Linie + Endpunkt zeigen, Punkte erscheinen beim Antippen
+  const baseR = (i) => (pts.length > 20 && i !== pts.length - 1 ? 0 : 4);
+  P.forEach((q, i) => { s += `<circle class="ldot" data-i="${i}" cx="${q[0].toFixed(2)}" cy="${q[1].toFixed(2)}" r="${baseR(i)}"/>`; });
+  // Endwert direkt beschriften
+  const L = P[P.length - 1];
+  const anchor = L[0] > W - m.r - 34 ? 'end' : L[0] < m.l + 34 ? 'start' : 'middle';
+  s += `<text class="endlbl" x="${L[0].toFixed(1)}" y="${(L[1] - 11).toFixed(1)}" text-anchor="${anchor}">${esc(cfg.fmt(pts[pts.length - 1].v))}</text>`;
+  for (const tk of timeTicks(x0, x1)) {
+    const xx = Math.min(Math.max(X(tk.x), m.l + 16), W - m.r - 16);
+    s += `<text class="ax" x="${xx.toFixed(1)}" y="${H - 7}" text-anchor="middle">${esc(tk.label)}</text>`;
+  }
+  s += '</svg>';
+  el.innerHTML = s;
+
+  const svg = el.querySelector('svg');
+  const xh = svg.querySelector('.xhair');
+  const dots = svg.querySelectorAll('.ldot');
+  const tip = document.createElement('div');
+  tip.className = 'tip';
+  tip.hidden = true;
+  el.appendChild(tip);
+  let active = -1;
+  function hide() {
+    active = -1;
+    tip.hidden = true;
+    xh.setAttribute('visibility', 'hidden');
+    dots.forEach((d, j) => d.setAttribute('r', String(baseR(j))));
+  }
+  function show(i) {
+    if (i < 0 || i >= pts.length) return hide();
+    active = i;
+    const p = pts[i];
+    xh.setAttribute('x1', P[i][0]); xh.setAttribute('x2', P[i][0]);
+    xh.setAttribute('visibility', 'visible');
+    dots.forEach((d, j) => d.setAttribute('r', j === i ? '6' : String(baseR(j))));
+    tip.textContent = '';
+    const bv = document.createElement('b'); bv.textContent = p.tipValue; tip.appendChild(bv);
+    const l1 = document.createElement('div'); l1.className = 'tl'; l1.textContent = p.tipTitle; tip.appendChild(l1);
+    const l2 = document.createElement('div'); l2.textContent = p.tipExtra; tip.appendChild(l2);
+    tip.hidden = false;
+    const scale = svg.getBoundingClientRect().width / W;
+    const tw = tip.offsetWidth;
+    const left = Math.max(tw / 2 + 2, Math.min(el.clientWidth - tw / 2 - 2, P[i][0] * scale));
+    tip.style.left = left + 'px';
+    tip.style.top = Math.max(tip.offsetHeight + 2, P[i][1] * scale - 14) + 'px';
+  }
+  const nearest = (ev) => {
+    const r = svg.getBoundingClientRect();
+    const x = (ev.clientX - r.left) * (W / r.width);
+    let bi = 0, bd = Infinity;
+    P.forEach((q, j) => { const d = Math.abs(q[0] - x); if (d < bd) { bd = d; bi = j; } });
+    return bi;
+  };
+  svg.addEventListener('pointerdown', (ev) => show(nearest(ev)));
+  svg.addEventListener('pointermove', (ev) => { if (ev.pointerType === 'mouse' || ev.buttons) show(nearest(ev)); });
+  svg.addEventListener('pointerleave', (ev) => { if (ev.pointerType === 'mouse') hide(); });
+  svg.addEventListener('keydown', (ev) => {
+    if (ev.key === 'ArrowRight') { ev.preventDefault(); show(Math.min(pts.length - 1, active + 1)); }
+    else if (ev.key === 'ArrowLeft') { ev.preventDefault(); show(Math.max(0, active < 0 ? pts.length - 1 : active - 1)); }
+    else if (ev.key === 'Escape') hide();
+  });
+  svg.addEventListener('blur', hide);
+  el._hide = hide;
+}
+
+/* ---------- Dialoge: Übung & Satz ---------- */
+function openDlg(d) { if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', ''); }
+function closeDlg(d) { if (d.open) d.close(); }
+
+const xDlg = $('#exDialog');
+let exDlgMode = 'add';
+function openExDialog(mode) {
+  exDlgMode = mode;
+  const ex = mode === 'edit' ? state.exercises.find((x) => x.id === curEx) : null;
+  $('#exDlgTitle').textContent = mode === 'edit' ? 'Übung bearbeiten' : 'Übung hinzufügen';
+  $('#exSave').textContent = mode === 'edit' ? 'Speichern' : 'Hinzufügen';
+  $('#exNameInput').value = ex ? ex.name : '';
+  $('#exDelete').hidden = mode !== 'edit';
+  $('#exError').hidden = true;
+  const sug = $('#exSuggest');
+  sug.textContent = '';
+  if (mode === 'add') {
+    const have = new Set(state.exercises.map((x) => x.name.toLowerCase()));
+    SUGGEST.filter((n) => !have.has(n.toLowerCase())).forEach((n) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip'; b.textContent = n;
+      b.addEventListener('click', () => { $('#exNameInput').value = n; $('#exError').hidden = true; });
+      sug.appendChild(b);
+    });
+  }
+  sug.hidden = !sug.children.length;
+  openDlg(xDlg);
+}
+$('#addExBtn').addEventListener('click', () => openExDialog('add'));
+$('#exEdit').addEventListener('click', () => openExDialog('edit'));
+$('#exCancel').addEventListener('click', () => closeDlg(xDlg));
+xDlg.addEventListener('click', (ev) => { if (ev.target === xDlg) closeDlg(xDlg); });
+$('#exForm').addEventListener('submit', (ev) => {
+  ev.preventDefault();
+  const name = $('#exNameInput').value.trim().replace(/\s+/g, ' ').slice(0, 40);
+  const err = $('#exError');
+  if (!name) { err.textContent = 'Gib einen Namen ein, zum Beispiel Bankdrücken.'; err.hidden = false; return; }
+  const dupe = state.exercises.some((x) => x.name.toLowerCase() === name.toLowerCase() && (exDlgMode === 'add' || x.id !== curEx));
+  if (dupe) { err.textContent = 'Diese Übung gibt es schon.'; err.hidden = false; return; }
+  if (exDlgMode === 'edit') {
+    const ex = state.exercises.find((x) => x.id === curEx);
+    if (!ex) return closeDlg(xDlg);
+    ex.name = name;
+    save();
+    closeDlg(xDlg);
+    renderExercise();
+    toast('Name gespeichert');
+  } else {
+    const ex = { id: uid(), name, created: Date.now() };
+    state.exercises.push(ex);
+    if (!save()) { state.exercises.pop(); return; }
+    closeDlg(xDlg);
+    openExercise(ex.id);
+    toast(`${name} hinzugefügt`);
+  }
+});
+$('#exDelete').addEventListener('click', () => {
+  const ex = state.exercises.find((x) => x.id === curEx);
+  if (!ex) return closeDlg(xDlg);
+  const removedSets = state.sets.filter((s) => s.ex === ex.id);
+  if (removedSets.length && !confirm(`${ex.name} und ${removedSets.length === 1 ? 'den eingetragenen Satz' : 'alle ' + removedSets.length + ' Sätze'} löschen?`)) return;
+  state.exercises = state.exercises.filter((x) => x.id !== ex.id);
+  state.sets = state.sets.filter((s) => s.ex !== ex.id);
+  save();
+  closeDlg(xDlg);
+  navBack();
+  setTimeout(() => toast(`${ex.name} gelöscht`, 'Rückgängig', () => {
+    state.exercises.push(ex);
+    state.sets = state.sets.concat(removedSets);
+    save();
+    if (view === 'training') renderTraining();
+  }), 250);
+});
+
+const sDlg = $('#setDialog');
+let editSetId = null;
+function openSetEdit(id) {
+  const s = state.sets.find((x) => x.id === id);
+  if (!s) return;
+  editSetId = id;
+  $('#sKg').value = fin(s.kg);
+  $('#sReps').value = String(s.reps);
+  $('#sDate').value = s.date;
+  $('#sDate').max = today();
+  $('#sError').hidden = true;
+  openDlg(sDlg);
+}
+$('#sCancel').addEventListener('click', () => closeDlg(sDlg));
+sDlg.addEventListener('click', (ev) => { if (ev.target === sDlg) closeDlg(sDlg); });
+$('#setEditForm').addEventListener('submit', (ev) => {
+  ev.preventDefault();
+  const s = state.sets.find((x) => x.id === editSetId);
+  if (!s) return closeDlg(sDlg);
+  const kg = parseKg($('#sKg').value), reps = parseReps($('#sReps').value), d = $('#sDate').value;
+  const err = $('#sError');
+  if (kg == null) { err.textContent = 'Gib das Gewicht in kg ein (ohne Zusatzgewicht: 0).'; err.hidden = false; return; }
+  if (reps == null) { err.textContent = 'Gib die Anzahl der Wiederholungen ein.'; err.hidden = false; return; }
+  if (!isDate(d) || d > today()) { err.textContent = 'Wähle einen Tag bis heute.'; err.hidden = false; return; }
+  const before = Object.assign({}, s);
+  Object.assign(s, { kg, reps, date: d });
+  if (d !== before.date) s.t = Date.now();
+  if (!save()) { Object.assign(s, before); return; }
+  closeDlg(sDlg);
+  renderExercise();
+  toast(d !== before.date ? `Satz auf ${fd(d, 'dmon')} verschoben` : 'Änderung gespeichert');
+});
+$('#sDelete').addEventListener('click', () => {
+  const i = state.sets.findIndex((x) => x.id === editSetId);
+  if (i < 0) return closeDlg(sDlg);
+  const [rm] = state.sets.splice(i, 1);
+  save();
+  closeDlg(sDlg);
+  renderExercise();
+  toast(`Satz gelöscht: ${fmtSet(rm)}`, 'Rückgängig', () => {
+    state.sets.push(rm);
+    save();
+    if (view === 'exercise') renderExercise();
+  });
 });
 
 /* =========================================================
    EINSTELLUNGEN
    ========================================================= */
 function renderSettings() {
-  $('#goalInput').value = fg(goalFor(today()));
+  $('#goalInput').value = fin(goalFor(today()));
   $('#goalAll').checked = false;
   const n = state.entries.length;
   const f = firstDate();
-  $('#dataMeta').textContent = n ? `${n} ${n === 1 ? 'Eintrag' : 'Einträge'} gespeichert, seit ${fd(f, 'dmy')}.` : 'Noch keine Einträge gespeichert.';
+  let meta = n ? `Gespeichert: ${n} Protein-${n === 1 ? 'Eintrag' : 'Einträge'} seit ${fd(f, 'dmy')}` : 'Noch keine Protein-Einträge gespeichert';
+  const ns = state.sets.length, ne = state.exercises.length;
+  if (ne) meta += `, ${ns} ${ns === 1 ? 'Trainingssatz' : 'Trainingssätze'} in ${ne} ${ne === 1 ? 'Übung' : 'Übungen'}`;
+  $('#dataMeta').textContent = meta + '.';
   $('#installGroup').hidden = isStandalone();
 }
 
@@ -1366,13 +2240,16 @@ $('#goalForm').addEventListener('submit', (ev) => {
 });
 
 $('#exportBtn').addEventListener('click', async () => {
-  const data = { app: 'protein-tracker', exported: new Date().toISOString(), v: 1, goals: state.goals, entries: state.entries };
+  const data = {
+    app: 'protracker', exported: new Date().toISOString(), v: 1,
+    goals: state.goals, entries: state.entries, exercises: state.exercises, sets: state.sets,
+  };
   const json = JSON.stringify(data, null, 2);
-  const name = `protein-backup-${today()}.json`;
+  const name = `protracker-backup-${today()}.json`;
   try {
     const file = new File([json], name, { type: 'application/json' });
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({ files: [file], title: 'Protein-Backup' });
+      await navigator.share({ files: [file], title: 'ProTracker-Backup' });
       return;
     }
   } catch (e) {
@@ -1392,12 +2269,23 @@ $('#importFile').addEventListener('change', async (ev) => {
   if (!file) return;
   try {
     const data = normalize(JSON.parse(await file.text()));
-    if (!data.entries.length && (!data.goals.length || data.goals[0].def)) throw new Error('leer');
+    const hasGoals = !data.goals[0].def;
+    if (!data.entries.length && !data.exercises.length && !hasGoals) throw new Error('leer');
     const ids = new Set(state.entries.map((e) => e.id));
     const fresh = data.entries.filter((e) => !ids.has(e.id));
-    if (!fresh.length) { toast('Alle Einträge aus dem Backup sind schon vorhanden.'); return; }
-    if (!confirm(`${fresh.length} neue Einträge aus dem Backup übernehmen? Vorhandene Einträge bleiben erhalten.`)) return;
+    const exIds = new Set(state.exercises.map((x) => x.id));
+    const freshEx = data.exercises.filter((x) => !exIds.has(x.id));
+    const setIds = new Set(state.sets.map((x) => x.id));
+    const freshSets = data.sets.filter((x) => !setIds.has(x.id));
+    if (!fresh.length && !freshEx.length && !freshSets.length) { toast('Alles aus dem Backup ist schon vorhanden.'); return; }
+    const parts = [];
+    if (fresh.length) parts.push(`${fresh.length} Protein-${fresh.length === 1 ? 'Eintrag' : 'Einträge'}`);
+    if (freshEx.length) parts.push(`${freshEx.length} ${freshEx.length === 1 ? 'Übung' : 'Übungen'}`);
+    if (freshSets.length) parts.push(`${freshSets.length} ${freshSets.length === 1 ? 'Trainingssatz' : 'Trainingssätze'}`);
+    if (!confirm(`${parts.join(', ')} aus dem Backup übernehmen? Vorhandene Daten bleiben erhalten.`)) return;
     state.entries = state.entries.concat(fresh);
+    state.exercises = state.exercises.concat(freshEx);
+    state.sets = state.sets.concat(freshSets);
     if (!data.goals[0].def) {
       const gm = new Map(state.goals.filter((x) => !x.def).map((x) => [x.from, x]));
       for (const x of data.goals) gm.set(x.from, { from: x.from, g: x.g });
@@ -1406,17 +2294,19 @@ $('#importFile').addEventListener('change', async (ev) => {
     }
     save();
     renderSettings();
-    toast(`${fresh.length} Einträge importiert`);
+    toast(`Importiert: ${parts.join(', ')}`);
   } catch (e) {
     toast('Diese Datei ist kein gültiges Backup.');
   }
 });
 
 $('#wipeBtn').addEventListener('click', () => {
-  if (!confirm('Wirklich alle Einträge und Einstellungen löschen? Das lässt sich nicht rückgängig machen.')) return;
+  if (!confirm('Wirklich alle Protein- und Trainingsdaten sowie Einstellungen löschen? Das lässt sich nicht rückgängig machen.')) return;
   state = normalize({ hintClosed: state.hintClosed });
   save();
   viewDate = today();
+  prefilledFor = null;
+  curEx = null;
   renderSettings();
   toast('Alle Daten gelöscht');
 });
@@ -1452,18 +2342,29 @@ function tick() {
   if (t !== lastToday) {
     if (viewDate === lastToday) viewDate = t;
     lastToday = t;
-    if (tab === 'today') renderToday(false);
-    if (tab === 'stats') renderStats();
+    if (view === 'today') renderToday(false);
+    if (view === 'stats') renderStats();
+    if (view === 'training') renderTraining();
+    if (view === 'exercise') { if (setDateAuto) $('#setDate').value = t; renderExercise(); }
   }
   if (timeAuto && document.activeElement !== elTime) elTime.value = nowTime();
 }
 setInterval(tick, 15000);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) tick(); });
 
-window.addEventListener('storage', (e) => { if (e.key === KEY) { state = load(); showTab(tab); } });
+window.addEventListener('storage', (e) => {
+  if (e.key !== KEY) return;
+  state = load();
+  showView(view, curEx, { fromPop: true, keepScroll: true, noSave: true });
+});
 
+// Start: normalerweise "Heute". Wer vor kurzem im Training war (z. B. im Studio), landet wieder dort.
 setTimeAuto(true);
-renderToday(false);
+(function start() {
+  const ar = state.ui.area;
+  if (ar && Date.now() - (Number(ar.t) || 0) < 3 * 3600 * 1000 && (ar.v === 'training' || ar.v === 'exercise')) showView(ar.v, ar.ex);
+  else showView('today');
+})();
 
 if ('serviceWorker' in navigator && location.protocol !== 'file:') {
   window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').catch(() => {}); });

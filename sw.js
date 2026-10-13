@@ -1,6 +1,6 @@
 /* Service Worker: macht die App offline nutzbar.
    Bei Änderungen an der App die Versionsnummer erhöhen, damit alte Dateien ersetzt werden. */
-const CACHE = 'protein-tracker-v1';
+const CACHE = 'protracker-v2';
 const ASSETS = [
   './',
   './index.html',
